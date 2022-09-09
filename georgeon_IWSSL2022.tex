@@ -47,9 +47,11 @@
  % *** Make sure there's no spurious space before \nametag ***
 
  % Two authors with the same address
-  \author{\Name{Author Name1\nametag{\thanks{with a note}}} \Email{abc@sample.com}\and
-   \Name{Author Name2} \Email{xyz@sample.com}\\
-   \addr Address}
+  \author{\Name{Olivier L. Georgeon} \Email{ogeorgeon@univ-catholyon.fr}\\
+  \addr UR Confluence, Sciences et Humanités (EA 1598) - Lyon Catholic University, France\\
+   \Name{Titouan Knockaert} \Email{titouan.knockaert@gmail.com}\\
+  \addr Université Claude Bernard Lyon 1, LIRIS CNRS UMR5205, F-69622 Villeurbanne, France
+}
 
  % Three or more authors with the same address:
  % \author{\Name{Author Name1} \Email{an1@sample.com}\\
@@ -94,23 +96,25 @@ List of keywords
 \section{Introduction}
 \label{sec:intro}
 
-This is a sample article that uses the \textsf{jmlr} class with
-the \texttt{pmlr} class option.  Please follow the guidelines in
-this sample document as it can help to reduce complications when
-combining the articles into a book. Please avoid using obsolete
-commands, such as \verb|\rm|, and obsolete packages, such as
-\textsf{epsfig}.\footnote{See
-\url{http://www.ctan.org/pkg/l2tabu}}
-
-Please also ensure that your document will compile with PDF\LaTeX.
-If you have an error message that's puzzling you, first check for it
-at the UK TUG FAQ
-\url{https://texfaq.org/FAQ-man-latex}.  If
-that doesn't help, create a minimal working example (see
-\url{https://www.dickimaw-books.com/latex/minexample}) and post
-to somewhere like TeX on StackExchange
-(\url{https://tex.stackexchange.com/}) or the LaTeX Community Forum
-(\url{https://latex.org/forum/}).
+The problem of getting mobile robots to autonomously learn the position of surrounding objects, recognize them, and keep track of their relative displacements is considered by many to be a key prerequisite of truly autonomous robots. 
+Within this framework, the SLAM problem (Simultaneous Localization and Mapping) has been formalized and studied since the 1990s: constructing and updating a map of an unknown environment while simultaneously keeping track of the robot's position within it.
+SLAM algorithms are tailored to the available resources: odometric sensors, sensors of the environment, computational capacities, as well as the landmarks' properties, quantity, and dynamics, and the usage intended for the robot.
+When displacements are imprecise and odometric data is not available, when landmarks are not directly identifiable, and below a certain level of scarcity and noise in the sensory data relative to the environment’s complexity, it becomes difficult to perform SLAM accurately enough to use the robot for tasks involving complex navigation. 
+For such robots, we propose the SLAPI problem:  Simultaneous Localization and Active Phenomenon Inference.
+In contrast with SLAM, SLAPI does not aim at constructing a map to use for navigation. 
+Instead, it aims at organizing behavior spatially in the vicinity of objects to design robots that exhibit intrinsic motivation such as playfulness and curiosity as they discover and interact with unknown objects. 
+Possible applications may not include delivery tasks but may include entertainment and games, similar to playing with pets. 
+SLAPI makes no assumption that landmarks can be directly and passively uniquely identified through sensors. 
+The robot must rather actively interact with objects, possibly from different angles and through different modalities of control loops, to categorize and recognize objects, and possibly use them as landmarks. 
+This process is called active phenomenon inference. 
+Here the term phenomenon refers to the knowledge of physical objects actively constructed by the robot from its point of view and "as the robot experiences the object through interaction". 
+We designed a proof-of-concept algorithm to illustrate the SLAPI problem. 
+We demonstrated it in a robot mounted on omnidirectional wheels and endowed with an echo-localization sensor, photosensitive sensors, and an inertial measurement unit, but no camera and lidar. 
+As the robot circles around an object, it constructs the phenomenon corresponding to this object under the form of the set of the spatially-localized control loops that the object affords to the robot. 
+New elements can be subsequently added to this set as the robot improves its knowledge of the object. 
+Results show that the robot drew out a few cries of amusement and endearment from some human observers, which encourages us to keep improving this range of algorithms. 
+Moreover, we believe that the study of SLAPI problems can shed some light on how animals construct knowledge of objects through sensorimotor interactions, while keeping this knowledge grounded in experience. 
+It can also provide an angle of attack to the more general AI problem of self-motivated open-ended learning in the real world.
 
 \begin{note}
 This is an numbered theorem-like environment that was defined in
@@ -304,101 +308,67 @@ phrases, for example:
 \subsection{Tables}
 \label{sec:tables}
 
-Tables should go in the \texttt{table} environment. Within this
-environment use \verb|\floatconts| (defined by \textsf{jmlr})
-to set the caption correctly and center the table contents.
 
 \begin{table}[htbp]
  % The first argument is the label.
  % The caption goes in the second argument, and the table contents
  % go in the third argument.
 \floatconts
-  {tab:example}%
-  {\caption{An Example Table}}%
-  {\begin{tabular}{ll}
-  \bfseries Dataset & \bfseries Result\\
-  Data1 & 0.12345\\
-  Data2 & 0.67890\\
-  Data3 & 0.54321\\
-  Data4 & 0.09876
-  \end{tabular}}
-\end{table}
-
-If you want horizontal rules you can use the \textsf{booktabs}
-package which provides the commands \verb|\toprule|, 
-\verb|\midrule| and \verb|\bottomrule|. For example, see
-\tableref{tab:example-booktabs}.
-
-\begin{table}[hbtp]
-\floatconts
-  {tab:example-booktabs}
-  {\caption{A Table With Horizontal Lines}}
-  {\begin{tabular}{ll}
+  {tab:actions}%
+  {\caption{Data exchanged between the PC and the robot through wifi}}%
+  {\begin{tabular}{l|l}
   \toprule
-  \bfseries Dataset & \bfseries Result\\
+  PC to Robot & Action code, focus position (x, y), estimated speed (x,y)\\
   \midrule
-  Data1 & 0.12345\\
-  Data2 & 0.67890\\
-  Data3 & 0.54321\\
-  Data4 & 0.09876\\
+  Robot to PC & Outcome code, echo distance, head direction, yaw, azimuth, duration\\
   \bottomrule
   \end{tabular}}
 \end{table}
 
-If you want vertical lines as well, you can't use the
-\textsf{booktabs} commands as there'll be some unwanted gaps.
-Instead you can use \LaTeX's \verb|\hline|, but the rows may
-appear a bit cramped.  You can add extra space above or below a
-row using \verb|\abovestrut| and \verb|\belowstrut|. For example,
-see \tableref{tab:example-hline}.
-
 \begin{table}[htbp]
-\floatconts
-  {tab:example-hline}
-  {\caption{A Table With Horizontal and Vertical Lines}}%
-  {%
-    \begin{tabular}{|l|l|}
-    \hline
-    \abovestrut{2.2ex}\bfseries Dataset & \bfseries Result\\\hline
-    \abovestrut{2.2ex}Data1 & 0.12345\\
-    Data2 & 0.67890\\
-    Data3 & 0.54321\\
-    \belowstrut{0.2ex}Data4 & 0.09876\\\hline
-    \end{tabular}
-  }
+	\floatconts
+	{tab:subtabex}
+	{\caption{Actions available to the robot and their possible outcomes}}
+	{%
+		\subtable[Actions]{%
+			\label{tab:ab}%
+			\begin{tabular}{lc}
+				\toprule
+				\bfseries Action & \bfseries Span\\
+				\midrule
+				Forward & During 1 second\\
+				Backward & or until line\\
+				Shift left & detection\\
+				Shift right & \\ \hline
+				Turn left & $\pi/4$ \\
+				Turn right & $-\pi/4$ \\ \hline
+				Head scan & $[-\pi/2, \pi/2]$ \\
+				\bottomrule
+		\end{tabular}}
+		\qquad
+		\subtable[Outcomes]{%
+			\label{tab:cd}%
+			\begin{tabular}{lc}
+				\toprule
+				\bfseries Outcome & \bfseries Description\\
+				\midrule
+				Line left & Floor sensors cross \\
+				Line front & luminosity threshold\\
+				Line right & \\ \hline
+				Echo lost focus & No echo where expected \\ \hline
+				Echo left & Direction\\  
+				Echo right & and range \\  
+				Echo far left & of the \\  
+				Echo far right & nearest echo\\  
+				Echo far front & \\
+				Echo close front & \\ \hline
+				Default & No line, no echo \\ 
+				\bottomrule
+			\end{tabular}
+		}
+	}
 \end{table}
 
-If you want to align numbers on their decimal point, you can
-use the \textsf{siunitx} package. For example, see
-\tableref{tab:example-siunitx}. For further details see the
-\textsf{siunitx} documentation\footnote{Either \texttt{texdoc
-siunitx} or \url{http://www.ctan.org/pkg/siunitx}}.
-
-\begin{table}[htbp]
-\floatconts
-  {tab:example-siunitx}
-  {\caption{A Table With Numbers Aligned on the Decimal Point}}
-  {\begin{tabular}{lS}
-  \bfseries Dataset & {\bfseries Result}\\
-  Data1 & 0.12345\\
-  Data2 & 10.6789\\
-  Data3 & 50.543\\
-  Data4 & 200.09876
-  \end{tabular}}
-\end{table}
-
-If the table is too wide, you can adjust the inter-column
-spacing by changing the value of \verb|\tabcolsep|. For
-example:
-\begin{verbatim}
-\setlength{\tabcolsep}{3pt}
-\end{verbatim}
-If the table is very wide but not very long, you can use the
-\texttt{sidewaystable} environment defined in the
-\textsf{rotating} package (so use \verb|\usepackage{rotating}|).
-If the table is too long to fit on a page, you should use the
-\texttt{longtable} environment defined in the \textsf{longtable}
-package (so use \verb|\usepackage{longtable}|).
 
 \subsection{Figures}
 \label{sec:figures}
@@ -414,11 +384,31 @@ than an explicit length. For example, see \figureref{fig:image}.
 \begin{figure}[htbp]
  % Caption and label go in the first argument and the figure contents
  % go in the second argument
-\floatconts
-  {fig:image}
-  {\caption{Example Image}}
-  {\includegraphics[width=0.5\linewidth]{example-image}}
+  \floatconts
+  {fig:robot}
+  {\caption{The interaction cycle}}
+  {\includegraphics[width=0.8\linewidth]{images/Figure_0_Cycle}}
 \end{figure}
+
+\begin{figure}[htbp]
+	% Caption and label go in the first argument and the figure contents
+	% go in the second argument
+	\floatconts
+	{fig:robot}
+	{\caption{The robot}}
+	{\includegraphics[width=0.8\linewidth]{images/Figure_1_Robot}}
+\end{figure}
+
+
+\begin{figure}[htbp]
+	% Caption and label go in the first argument and the figure contents
+	% go in the second argument
+	\floatconts
+	{fig:architecture}
+	{\caption{The Model-View-Controller architecture}}
+	{\includegraphics[width=0.8\linewidth]{images/Figure_2_Architecture}}
+\end{figure}
+
 
 If your image is made up of \LaTeX\ code (for example, commands
 provided by the \textsf{pgf} package) you can include it using
@@ -429,8 +419,8 @@ For example, see \figureref{fig:teximage}.
 \begin{figure}[htbp]
 \floatconts
   {fig:teximage}
-  {\caption{Image Created Using \LaTeX\ Code}}
-  {\includeteximage[angle=45]{example-teximage}}
+  {\caption{The robot}}
+  {\includeteximage[angle=45]{images/Figure_1_Robot}}
 \end{figure}
 
 If the figure is too wide to fit on the page, you can use the
@@ -510,68 +500,6 @@ the minimum width to be made available for the sub-captions, as in
   }%
 \end{figure}
 
-\subsection{Sub-Tables}
-\label{sec:subtables}
-There is an analogous command \verb|\subtable| for sub-tables.
-It has the same syntax as \verb|\subfigure| described above.
-You can reference the table using \verb|\tableref|, for example
-\tableref{tab:subtabex} or you can reference part of the table,
-for example \tableref{tab:ab}. Alternatively you can reference the
-subtable using \verb|\subtabref|, for example
-\subtabref{tab:ab,tab:cd} in \tableref{tab:subtabex}.
-
-\begin{table}[htbp]
-\floatconts
- {tab:subtabex}
- {\caption{An Example With Sub-Tables}}
- {%
-   \subtable{%
-     \label{tab:ab}%
-     \begin{tabular}{cc}
-     \bfseries A & \bfseries B\\
-     1 & 2
-     \end{tabular}
-   }\qquad
-   \subtable{%
-     \label{tab:cd}%
-     \begin{tabular}{cc}
-     \bfseries C & \bfseries D\\
-     3 & 4\\
-     5 & 6
-     \end{tabular}
-   }
- }
-\end{table}
-
-By default, the sub-tables are aligned on the top.
-This can be changed using the second optional argument
-of \verb|\subtable|. This may be \texttt{t} (top), \texttt{c}
-(centered) or \texttt{b} (bottom). For example, the sub-tables
-\subtabref{tab:ab2,tab:cd2} in \tableref{tab:subtabex2}
-both have \verb|[c]| as the second optional argument.
-
-\begin{table}[htbp]
-\floatconts
- {tab:subtabex2}
- {\caption{Another Example With Sub-Tables}}
- {%
-   \subtable[][c]{%
-     \label{tab:ab2}%
-     \begin{tabular}{cc}
-     \bfseries A & \bfseries B\\
-     1 & 2
-     \end{tabular}
-   }\qquad
-   \subtable[][c]{%
-     \label{tab:cd2}%
-     \begin{tabular}{cc}
-     \bfseries C & \bfseries D\\
-     3 & 4\\
-     5 & 6
-     \end{tabular}
-   }
- }
-\end{table}
 
 \subsection{Algorithms}
 \label{sec:algorithms}
