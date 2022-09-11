@@ -15,6 +15,9 @@
  % Remove the next line if you don't require it.
 \usepackage[load-configurations=version-1]{siunitx} % newer version
  %\usepackage{siunitx}
+ 
+ % OG from doc https://en.wikibooks.org/wiki/LaTeX/Tables#Floating_with_table 
+ \usepackage{multirow}
 
  % The following command is just for this sample document:
 \newcommand{\cs}[1]{\texttt{\char`\\#1}}
@@ -97,252 +100,129 @@ List of keywords
 \label{sec:intro}
 
 The problem of getting mobile robots to autonomously learn the position of surrounding objects, recognize them, and keep track of their relative displacements is considered by many to be a key prerequisite of truly autonomous robots. 
-Within this framework, the SLAM problem (Simultaneous Localization and Mapping) has been formalized and studied since the 1990s: constructing and updating a map of an unknown environment while simultaneously keeping track of the robot's position within it.
+Within this framework, the SLAM problem (Simultaneous Localization and Mapping) has been formalized and studied since the 1990s: constructing and updating a map of an unknown environment while simultaneously keeping track of the robot's position within it \citep[e.g.,][]{taketomi_visual_2017}.
 SLAM algorithms are tailored to the available resources: odometric sensors, sensors of the environment, computational capacities, as well as the landmarks' properties, quantity, and dynamics, and the usage intended for the robot.
-When displacements are imprecise and odometric data is not available, when landmarks are not directly identifiable, and below a certain level of scarcity and noise in the sensory data relative to the environment’s complexity, it becomes difficult to perform SLAM accurately enough to use the robot for tasks involving complex navigation. 
+
+When displacements are imprecise and odometric data is not available, when landmarks are not directly identifiable, and below a certain level of scarcity and noise in the sensory data relative to the environment’s complexity, it becomes difficult to perform SLAM accurately enough to use the robot for tasks involving complex navigation \citep{gay_towards_2021}. 
 For such robots, we propose the SLAPI problem:  Simultaneous Localization and Active Phenomenon Inference.
 In contrast with SLAM, SLAPI does not aim at constructing a map to use for navigation. 
-Instead, it aims at organizing behavior spatially in the vicinity of objects to design robots that exhibit intrinsic motivation such as playfulness and curiosity as they discover and interact with unknown objects. 
+Instead, it aims at organizing behavior spatially in the vicinity of objects to design robots that exhibit intrinsic motivation \citep[e.g.,][]{oudeyer_intrinsic_2007} such as playfulness and curiosity as they discover and interact with unknown objects. 
 Possible applications may not include delivery tasks but may include entertainment and games, similar to playing with pets. 
+
 SLAPI makes no assumption that landmarks can be directly and passively uniquely identified through sensors. 
 The robot must rather actively interact with objects, possibly from different angles and through different modalities of control loops, to categorize and recognize objects, and possibly use them as landmarks. 
-This process is called active phenomenon inference. 
-Here the term phenomenon refers to the knowledge of physical objects actively constructed by the robot from its point of view and "as the robot experiences the object through interaction". 
+We call this process \textit{active phenomenon inference}, drawing from the work of \cite{friston_world_2021} on active inference. 
+Here the term \textit{phenomenon} refers to the knowledge of physical objects actively constructed by the robot from its point of view and ``as the robot experiences the object through interaction'' \citep{thorisson_explanation_2021}. 
+
 We designed a proof-of-concept algorithm to illustrate the SLAPI problem. 
 We demonstrated it in a robot mounted on omnidirectional wheels and endowed with an echo-localization sensor, photosensitive sensors, and an inertial measurement unit, but no camera and lidar. 
 As the robot circles around an object, it constructs the phenomenon corresponding to this object under the form of the set of the spatially-localized control loops that the object affords to the robot. 
 New elements can be subsequently added to this set as the robot improves its knowledge of the object. 
 Results show that the robot drew out a few cries of amusement and endearment from some human observers, which encourages us to keep improving this range of algorithms. 
+
 Moreover, we believe that the study of SLAPI problems can shed some light on how animals construct knowledge of objects through sensorimotor interactions, while keeping this knowledge grounded in experience. 
 It can also provide an angle of attack to the more general AI problem of self-motivated open-ended learning in the real world.
 
-\begin{note}
-This is an numbered theorem-like environment that was defined in
-this document's preamble.
-\end{note}
+\section{The representational status of sensory data}
+\label{sec:input}
 
-\subsection{Sub-sections}
+An autonomous agent faces the necessity to actively infer the existence and the properties of objects in its environment when such existence and properties are not directly registered in sensory data. 
+This raises the question of the \textit{representational status of sensory} data: is sensory data representational or not? 
+This question has been discussed times and again at the philosophical level \citep[e.g.,][]{williford_husserls_2013}.
+Loosely, two hypotheses collide: the hypothesis that sensory data carry information about features of the world, versus the hypothesis that sensory data carry information about the agent's experience of interaction with the world. 
+We refer to the former as the \textit{representationalist hypothesis}, and to the latter as the \textit{constructivist hypothesis} because it relates to Piaget's theory of construcitivist learning based on sensorimotor schemes \citep{guillermin_artificial_2022}. 
 
-Sub-sections are produced using \verb|\subsection|.
-
-\subsubsection{Sub-sub-sections}
-
-Sub-sub-sections are produced using \verb|\subsubsection|.
-
-\paragraph{Sub-sub-sub-sections}
-
-Sub-sub-sub-sections are produced using \verb|\paragraph|.
-These are unnumbered with a running head.
-
-\subparagraph{Sub-sub-sub-sub-sections}
-
-Sub-sub-sub-sub-sections are produced using \verb|\subparagraph|.
-These are unnumbered with a running head.
-
-\section{Cross-Referencing}
-
-Always use \verb|\label| and \verb|\ref| (or one of the commands
-described below) when cross-referencing.  For example, the next
-section is Section~\ref{sec:math}. The \textsf{jmlr} class
-provides some convenient cross-referencing commands:
-\verb|\sectionref|, \verb|\equationref|, \verb|\tableref|,
-\verb|\figureref|, \verb|\algorithmref|, \verb|\theoremref|,
-\verb|\lemmaref|, \verb|\remarkref|, \verb|\corollaryref|,
-\verb|\definitionref|, \verb|\conjectureref|, \verb|\axiomref|,
-\verb|\exampleref| and \verb|\appendixref|. The argument of these
-commands may either be a single label or a comma-separated list
-of labels. Examples:
-
-Referencing sections: \sectionref{sec:math} or
-\sectionref{sec:intro,sec:math} or
-\sectionref{sec:intro,sec:math,sec:tables,sec:figures}.
-
-Referencing equations: \equationref{eq:trigrule} or
-\equationref{eq:trigrule,eq:df} or
-\equationref{eq:trigrule,eq:f,eq:df,eq:y}.
-
-Referencing tables: \tableref{tab:operatornames} or
-\tableref{tab:operatornames,tab:example} or
-\tableref{tab:operatornames,tab:example,tab:example-booktabs}.
-
-Referencing figures: \figureref{fig:image} or
-\figureref{fig:image,fig:teximage} or
-\figureref{fig:image,fig:teximage,fig:subfigex} or
-\figureref{fig:image-a,fig:image-b}.
-
-Referencing algorithms: \algorithmref{alg:gauss} or
-\algorithmref{alg:gauss,alg:moore} or
-\algorithmref{alg:gauss,alg:moore,alg:net}.
-
-Referencing theorem-like environments: \theoremref{thm:eigenpow},
-\lemmaref{lem:sample}, \remarkref{rem:sample}, 
-\corollaryref{cor:sample}, \definitionref{def:sample},
-\conjectureref{con:sample}, \axiomref{ax:sample} and
-\exampleref{ex:sample}.
-
-Referencing appendices: \appendixref{apd:first} or
-\appendixref{apd:first,apd:second}.
-
-\section{Equations}
-\label{sec:math}
-
-The \textsf{jmlr} class loads the \textsf{amsmath} package, so
-you can use any of the commands and environments defined there.
-(See the \textsf{amsmath} documentation for further
-details.\footnote{Either \texttt{texdoc amsmath} or
-\url{http://www.ctan.org/pkg/amsmath}})
-
-Unnumbered single-lined equations should be displayed using
-\verb|\[| and \verb|\]|. For example:
-\[E = m c^2\]
-Numbered single-line equations should be displayed using the
-\texttt{equation} environment. For example:
-\begin{equation}\label{eq:trigrule}
-\cos^2\theta + \sin^2\theta \equiv 1
-\end{equation}
-This can be referenced using \verb|\label| and \verb|\equationref|.
-For example, \equationref{eq:trigrule}.
-
-Multi-lined numbered equations should be displayed using the
-\texttt{align} environment.\footnote{For reasons why you 
-shouldn't use the obsolete \texttt{eqnarray} environment, see
-Lars Madsen, \emph{Avoid eqnarray!} TUGboat 33(1):21--25, 2012.} For example:
-\begin{align}
-f(x) &= x^2 + x\label{eq:f}\\
-f'(x) &= 2x + 1\label{eq:df}
-\end{align}
-Unnumbered multi-lined equations should be displayed using the
-\texttt{align*} environment. For example:
-\begin{align*}
-f(x) &= (x+1)(x-1)\\
-&= x^2 - 1
-\end{align*}
-If you want to mix numbered with unnumbered lines use the
-align environment and suppress unwanted line numbers with
-\verb|\nonumber|. For example:
-\begin{align}
-y &= x^2 + 3x - 2x + 1\nonumber\\
-&= x^2 + x + 1\label{eq:y}
-\end{align}
-An equation that is too long to fit on a single line can be
-displayed using the \texttt{split} environment. 
-Text can be embedded in an equation using \verb|\text| or
-\verb|\intertext| (as used in \theoremref{thm:eigenpow}).
-See the \textsf{amsmath} documentation for further details.
-
-\subsection{Operator Names}
-\label{sec:op}
-
-Predefined operator names are listed in \tableref{tab:operatornames}.
-For additional operators, either use \verb|\operatorname|,
-for example $\operatorname{var}(X)$ or declare it with
-\verb|\DeclareMathOperator|, for example
-\begin{verbatim}
-\DeclareMathOperator{\var}{var}
-\end{verbatim}
-and then use this new command. If you want limits that go above and
-below the operator (like \verb|\sum|) use the starred versions
-(\verb|\operatorname*| or \verb|\DeclareMathOperator*|).
-
-\begin{table}[htbp]
-\floatconts
-  {tab:operatornames}%
-  {\caption{Predefined Operator Names (taken from 
-   \textsf{amsmath} documentation)}}%
-  {%
-\begin{tabular}{rlrlrlrl}
-\cs{arccos} & $\arccos$ &  \cs{deg} & $\deg$ &  \cs{lg} & $\lg$ &  \cs{projlim} & $\projlim$ \\
-\cs{arcsin} & $\arcsin$ &  \cs{det} & $\det$ &  \cs{lim} & $\lim$ &  \cs{sec} & $\sec$ \\
-\cs{arctan} & $\arctan$ &  \cs{dim} & $\dim$ &  \cs{liminf} & $\liminf$ &  \cs{sin} & $\sin$ \\
-\cs{arg} & $\arg$ &  \cs{exp} & $\exp$ &  \cs{limsup} & $\limsup$ &  \cs{sinh} & $\sinh$ \\
-\cs{cos} & $\cos$ &  \cs{gcd} & $\gcd$ &  \cs{ln} & $\ln$ &  \cs{sup} & $\sup$ \\
-\cs{cosh} & $\cosh$ &  \cs{hom} & $\hom$ &  \cs{log} & $\log$ &  \cs{tan} & $\tan$ \\
-\cs{cot} & $\cot$ &  \cs{inf} & $\inf$ &  \cs{max} & $\max$ &  \cs{tanh} & $\tanh$ \\
-\cs{coth} & $\coth$ &  \cs{injlim} & $\injlim$ &  \cs{min} & $\min$ \\
-\cs{csc} & $\csc$ &  \cs{ker} & $\ker$ &  \cs{Pr} & $\Pr$
-\end{tabular}\par
-\begin{tabular}{rlrl}
-\cs{varlimsup} & $\varlimsup$ 
-& \cs{varinjlim} & $\varinjlim$\\
-\cs{varliminf} & $\varliminf$ 
-& \cs{varprojlim} & $\varprojlim$
-\end{tabular}
-}
-\end{table}
-
-\section{Vectors and Sets}
-\label{sec:vec}
-
-Vectors should be typeset using \cs{vec}. For example $\vec{x}$.
-The \textsf{jmlr} class also provides \cs{set} to typeset a
-set. For example $\set{S}$.
-
-\section{Floats}
-\label{sec:floats}
-
-Floats, such as figures, tables and algorithms, are moving
-objects and are supposed to float to the nearest convenient
-location. Please don't force them to go in a particular place. In
-general it's best to use the \texttt{htbp} specifier and don't
-put the figure or table in the middle of a paragraph (that is
-make sure there's a paragraph break above and below the float).
-Floats are supposed to have a little extra space above and below
-them to make them stand out from the rest of the text. This extra
-spacing is put in automatically and shouldn't need modifying.
-
-To ensure consistency, please \emph{don't} try changing the format of the caption by doing
-something like:
-\begin{verbatim}
-\caption{\textit{A Sample Caption.}}
-\end{verbatim}
-or
-\begin{verbatim}
-\caption{\em A Sample Caption.}
-\end{verbatim}
-You can, of course, change the font for individual words or 
-phrases, for example:
-\begin{verbatim}
-\caption{A Sample Caption With Some \emph{Emphasized Words}.}
-\end{verbatim}
-
-\subsection{Tables}
-\label{sec:tables}
+SLAPI falls within the constructivist hypothesis because it applies to robots that have coarse sensors that do not provide much descriptive information about the environment. 
+The robot must probe the environment a little bit like a blind person who uses a cane to actively construct a mental representation of its surroundings. 
+Probing experiences consist of control loops during which the robot interacts with the environment.   
+They are triggered by an action intended by the robot and result in an outcome that is informative not of the object itself but of the possibility of interaction afforded by the object to the robot. 
+\figureref{fig:cycle} shows this cycle of interaction. 
+The software selects an action associated with spatial information that specify how the control loop should be enacted in the world. 
+In return, the software receives an outcome associated with spatial information that describes how the control loop has been enacted depending on the actual nature and position of surrounding objects. 
 
 
-\begin{table}[htbp]
- % The first argument is the label.
- % The caption goes in the second argument, and the table contents
- % go in the third argument.
-\floatconts
-  {tab:actions}%
-  {\caption{Data exchanged between the PC and the robot through wifi}}%
-  {\begin{tabular}{l|l}
-  \toprule
-  PC to Robot & Action code, focus position (x, y), estimated speed (x,y)\\
-  \midrule
-  Robot to PC & Outcome code, echo distance, head direction, yaw, azimuth, duration\\
-  \bottomrule
-  \end{tabular}}
-\end{table}
+\begin{figure}[htbp]
+	% Caption and label go in the first argument and the figure contents
+	% go in the second argument
+	\floatconts
+	{fig:cycle}
+	{\caption{The interaction cycle. Black bullet: the cycle begins with the software selecting an action containing spatial information to enact in the world (right). Black arrowhead: the cycle ends with the software receiving the outcome containing spatial information (left).}}
+	{\includegraphics[width=0.8\linewidth]{images/Figure_0_Cycle}}
+\end{figure}
+
+Note that the constructivist hypothesis accepts that the outcome may sometimes register features of the environment but only avoids baking this assumption in the algorithm \textit{a priori}. 
+\cite{rudrauf_mathematical_2017} have also proposed an active inference model related to the constructivist hypothesis. He states that ``All we need here is the idea that in one way or another the sensory organs provide an independent source of input and correction for the continually updated world model'' (p. 19).
+
+\section{The experimental setup}
+\label{sec:experiment}
+
+We use the robot cat of brand Osoyoo\footnote{\url{https://osoyoo.com/2019/11/08/omni-direction-mecanum-wheel-robotic-kit-v1/}}, to which we added an inertial measurement unit (\figureref{fig:robot}). 
+We set up an environment with black lines on the floor and various objects that can be detected through the echo-localization sensor. 
+Our goal is to design a robot that explores such environment and constructs knowledge of the objects that it encounters to exhibit behaviors that look interesting to human observers. 
+
+\begin{figure}[htbp]
+	% Caption and label go in the first argument and the figure contents
+	% go in the second argument
+	\floatconts
+	{fig:robot}
+	{\caption{The experimental setup. Osoyoo robots, a black line on the floor, and various objects detectable through echo-localization.}}
+	{\includegraphics[width=0.8\linewidth]{images/Figure_1_Robotb}}
+\end{figure}
+
+\section{The software architecture and algorithm}
+\label{sec:software}
+
+We implemented the cognitive architecture on a remote PC as depicted in \figureref{fig:architecture}. 
+This architecture takes the place of the \textit{Software} in \figureref{fig:cycle}, whereas the robot plus its environment takes the place of the \textit{World}.
+
+The architecture follows a regular Model-View-Controller design pattern in which the \textit{Memory} plays the role of the database, and the \textit{Workspace} plays the role of the Model. 
+The \textit{Memory} contains the Egocentric memory and the Allocentric memory which are displayed on screen via the \textit{View Controllers} (\figureref{fig:architecture}, right).
+The \textit{Workspace} contains the \textit{Synthesizer} which infers the phenomena, and the \textit{Decider} which selects the next action to send to the robot through wifi. 
+
+\begin{figure}[htbp]
+	% Caption and label go in the first argument and the figure contents
+	% go in the second argument
+	\floatconts
+	{fig:architecture}
+	{\caption{The software architecture implemented on a remote PC. 
+			Bottom: the robot recieves the action and sends back the outcome through wifi.
+			Top-right: Egocentric memory shows the position of echos (orange circles), the focus of attention (red hexagon), and the previous positions of the robot (green triangles).
+			Bottom-right: Allocentric memory shows the position of the echo (orange cells), the explored cells (white), the position of the robot (green), the unexpored cells (grey).}}
+	{\includegraphics[width=0.8\linewidth]{images/Figure_2_Architecture}}
+\end{figure}
+
+
+\subsection{The primitive control loops implemented in the robot}
+
+A C++ program on the robot's Arduino board handles the reception of the action, drives the control loop, and then returns the outcome through wifi. 
+\tableref{tab:action} lists the supported actions and outcomes.
+
+The reception of an action triggers the enaction of the corresponding control loop until its termination condition.
+For example, the \texttt{Forward} action sets the robot in motion. 
+It has three possible termination conditions: 
+\texttt{Default}: Time out of 1 second (approximately 20 cm traveled).
+\texttt{Line detection}: The floor sensor detects a line; the robot retreats back for a few centimeters. 
+\texttt{Shock}: The inertial measurement unit detects a strong deceleration indicating a shock with a solid object.
+
 
 \begin{table}[htbp]
 	\floatconts
-	{tab:subtabex}
+	{tab:action}
 	{\caption{Actions available to the robot and their possible outcomes}}
 	{%
 		\subtable[Actions]{%
 			\label{tab:ab}%
 			\begin{tabular}{lc}
 				\toprule
-				\bfseries Action & \bfseries Span\\
+				\bfseries Code & \bfseries Description\\
 				\midrule
-				Forward & During 1 second\\
-				Backward & or until line\\
-				Shift left & detection\\
-				Shift right & \\ \hline
-				Turn left & $\pi/4$ \\
-				Turn right & $-\pi/4$ \\ \hline
-				Head scan & $[-\pi/2, \pi/2]$ \\
+				\texttt{Forward} & \multirow{4}{2.5cm}{During 1 sec. or until shock or line detection}\\
+				\texttt{Backward} &  \\
+				\texttt{Shift left} &  \\
+				\texttt{Shift right} & \\ \hline
+				\texttt{Turn left} & $\pi/4$ \\
+				\texttt{Turn right} & $-\pi/4$ \\ \hline
+				\texttt{Head scan} & $[-\pi/2, \pi/2]$ \\
 				\bottomrule
 		\end{tabular}}
 		\qquad
@@ -350,358 +230,118 @@ phrases, for example:
 			\label{tab:cd}%
 			\begin{tabular}{lc}
 				\toprule
-				\bfseries Outcome & \bfseries Description\\
+				\bfseries Code & \bfseries Description\\
 				\midrule
-				Line left & Floor sensors cross \\
-				Line front & luminosity threshold\\
-				Line right & \\ \hline
-				Echo lost focus & No echo where expected \\ \hline
-				Echo left & Direction\\  
-				Echo right & and range \\  
-				Echo far left & of the \\  
-				Echo far right & nearest echo\\  
-				Echo far front & \\
-				Echo close front & \\ \hline
-				Default & No line, no echo \\ 
+				\texttt{Line left} & \multirow{3}{2.8cm}{Floor sensors cross luminosity threshold } \\
+				\texttt{Line front} & \\
+				\texttt{Line right} & \\ \hline
+				\texttt{Shock} & Violent deceleration \\ \hline
+				\texttt{Echo lost focus} & No echo where expected \\ \hline
+				\texttt{Echo left} & \multirow{6}{3cm}{Direction and range of the nearest echo}\\  
+				\texttt{Echo right} &  \\  
+				\texttt{Echo far left} & \\  
+				\texttt{Echo far right} & \\  
+				\texttt{Echo far front} & \\
+				\texttt{Echo close front} & \\ \hline
+				\texttt{Default} & No line, no echo \\ 
 				\bottomrule
 			\end{tabular}
 		}
 	}
 \end{table}
 
+Besides the action code, the cognitive architecture sends two more values to the robot: the coordinates of a focus point, and an estimated speed. 
+The robot's program uses these to keep the robot's head aligned towards the focus point during the robot's displacement. 
+This helps the robot keep tracks of objects over various moves. 
+It also gives the human observer the impression that the robot keeps it attention to a particular object, making it look more alive. 
 
-\subsection{Figures}
-\label{sec:figures}
+The robot also returns additional information to the cognitive architecture: the yaw, azimuth (angle relative to the north) and duration of the various phases of the control loop. 
+The cognitive architecture uses this information to update the spatial memory based on the robot's displacement. 
+Moreover, the robot's program controls the head so that it aligns itself towards the nearest echo. 
+The robot then returns the nearest echo measure along with the head direction. 
+The cognitive architecure uses this information to mark the position of echos in spatial memory. 
+This will be used to infer the presence of an object in the area. 
+\tableref{tab:dialogue} summarizes the data exchanged between the PC and the robot.
 
-Figures should go in the \texttt{figure} environment. Within this
-environment, use \verb|\floatconts| to correctly position the
-caption and center the image. Use \verb|\includegraphics|
-for external graphics files but omit the file extension. Do not
-use \verb|\epsfig| or \verb|\psfig|. If you want to scale the
-image, it's better to use a fraction of the line width rather
-than an explicit length. For example, see \figureref{fig:image}.
-
-\begin{figure}[htbp]
- % Caption and label go in the first argument and the figure contents
- % go in the second argument
-  \floatconts
-  {fig:robot}
-  {\caption{The interaction cycle}}
-  {\includegraphics[width=0.8\linewidth]{images/Figure_0_Cycle}}
-\end{figure}
-
-\begin{figure}[htbp]
-	% Caption and label go in the first argument and the figure contents
-	% go in the second argument
+\begin{table}[htbp]
+	% The first argument is the label.
+	% The caption goes in the second argument, and the table contents
+	% go in the third argument.
 	\floatconts
-	{fig:robot}
-	{\caption{The robot}}
-	{\includegraphics[width=0.8\linewidth]{images/Figure_1_Robot}}
-\end{figure}
+	{tab:dialogue}%
+	{\caption{Dialogue between the PC and the robot through wifi}}%
+	{\begin{tabular}{l|l}
+			\toprule
+			PC to Robot & Action code, focus coordinates $(x, y)$, estimated speed $(x, y)$\\
+			\midrule
+			Robot to PC & Outcome code, echo distance, head direction, yaw, azimuth, duration\\
+			\bottomrule
+	\end{tabular}}
+\end{table}
+
+\subsection{The egocentric memory}
+
+The egocentric memory stores the robot's \textit{experiences} in a coordinate system centered on the robot.
+It is inspired by the brain's egocentric cells located in the superior colliculus \citep{grieves_representation_2017}.
+
+An experience is a data structure that contains the action, the outcome, the position in space relative to the robot, and the timestamp. 
+The position in space corresponds to where the interaction took place, for example under the floor sensors for a line detection, or at the estimated origin of an echo. 
+The positions of experiences are updated with the robot's displacement on each interaction cycle. 
+
+Of course, errors accumulate causing a drift in the position of experiences, making them unreliable after a few cycles. 
+In the screen display (\figureref{fig:architecture}, top right), we make them fade away and disappear after 5 cycles.  
 
 
-\begin{figure}[htbp]
-	% Caption and label go in the first argument and the figure contents
-	% go in the second argument
-	\floatconts
-	{fig:architecture}
-	{\caption{The Model-View-Controller architecture}}
-	{\includegraphics[width=0.8\linewidth]{images/Figure_2_Architecture}}
-\end{figure}
+\subsection{The allocentric memory}
 
+The allocentric memory stores a spatial representation in a coordinate system relative the environment. 
+It is inspired by \textit{grid cells} in the hippocampus of the mammalian brain \citep{grieves_representation_2017}.
+Like natural grid cells, we implemented an hexagonal cell grid (\figureref{fig:architecture}, bottom right). 
+Each cell stores the list of experiences in a particular place, and can have one of the following status:
 
-If your image is made up of \LaTeX\ code (for example, commands
-provided by the \textsf{pgf} package) you can include it using
-\cs{includeteximage} (defined by the \textsf{jmlr} class). This
-can be scaled and rotated in the same way as \cs{includegraphics}.
-For example, see \figureref{fig:teximage}.
-
-\begin{figure}[htbp]
-\floatconts
-  {fig:teximage}
-  {\caption{The robot}}
-  {\includeteximage[angle=45]{images/Figure_1_Robot}}
-\end{figure}
-
-If the figure is too wide to fit on the page, you can use the
-\texttt{sidewaysfigure} environment defined in the
-\textsf{rotating} package.
-
-It's best not to use \verb|\graphicspath| with the \textsf{jmlr} class
-as it can cause problems with the production editing process. If the
-images are contained in a subdirectory, specify this when you
-include the image, for example \verb|\includegraphics{figures/mypic}|.
-
-\subsection{Sub-Figures}
-\label{sec:subfigures}
-
-Sub-figures can be created using \verb|\subfigure|, which is
-defined by the \textsf{jmlr} class. The optional argument allows
-you to provide a subcaption. The label should be placed in the
-mandatory argument of \verb|\subfigure|. You can reference the
-entire figure, for example \figureref{fig:subfigex}, or you can
-reference part of the figure using \verb|\figureref|, for example
-\figureref{fig:image-a}. Alternatively you can reference the
-subfigure using \verb|\subfigref|, for example
-\subfigref{fig:image-a,fig:image-b} in \figureref{fig:subfigex}.
-
-\begin{figure}[htbp]
-\floatconts
-  {fig:subfigex}
-  {\caption{An Example With Sub-Figures.}}
-  {%
-    \subfigure[Image A]{\label{fig:image-a}%
-      \includegraphics[width=0.2\linewidth]{example-image-a}}%
-    \qquad
-    \subfigure[Image B]{\label{fig:image-b}%
-      \includegraphics[width=0.25\linewidth]{example-image-b}}
-  }
-\end{figure}
-
-By default, the sub-figures are aligned on the baseline.
-This can be changed using the second optional argument
-of \verb|\subfigure|. This may be \texttt{t} (top), \texttt{c}
-(centered) or \texttt{b} (bottom). For example, the subfigures
-\subfigref{fig:image-a2,fig:image-b2} in \figureref{fig:subfigex2}
-both have \verb|[c]| as the second optional argument.
-
-\begin{figure}[htbp]
-\floatconts
-  {fig:subfigex2}
-  {\caption{Another Example With Sub-Figures (with a Cramped
-    Sub-Caption).}}
-  {%
-    \subfigure[Image A][c]{\label{fig:image-a2}%
-      \includegraphics[width=0.1\linewidth]{example-image-a}}%
-    \qquad
-    \subfigure[Image B][c]{\label{fig:image-b2}%
-      \includegraphics[width=0.3\linewidth]{example-image-b}}
-  }%
-\end{figure}
-
-Note that a very narrow sub-float will leave little space for the
-sub-caption, which will likely cause Underfull/Overfull hbox warnings.
-
-You can set the length \verb|\jmlrminsubcaptionwidth| to indicate
-the minimum width to be made available for the sub-captions, as in
-\figureref{fig:subfigex3}.
-
-\begin{figure}[htbp]
-\floatconts
-  {fig:subfigex3}
-  {\caption{Another Example With Sub-Figures (with a Less Cramped
-    Sub-Caption).}}
-  {\setlength{\jmlrminsubcaptionwidth}{0.2\linewidth}%
-    \subfigure[Image A][c]{\label{fig:image-a3}%
-     \includegraphics[width=0.1\linewidth]{example-image-a}}%
-    \qquad
-    \subfigure[Image B][c]{\label{fig:image-b3}%
-      \includegraphics[width=0.2\linewidth]{example-image-b}}
-  }%
-\end{figure}
-
-
-\subsection{Algorithms}
-\label{sec:algorithms}
-
-Enumerated textual algorithms can be displayed using the
-\texttt{algorithm} environment. Within this environment, use
-use an \texttt{enumerate} or nested \texttt{enumerate} environments.
-For example, see \algorithmref{alg:gauss}. Note that algorithms
-float like figures and tables.
-
-\begin{algorithm}[htbp]
-\floatconts
-{alg:gauss}% label
-{\caption{The Gauss-Seidel Algorithm}}
-{% contents
-\begin{enumerate}
-  \item For $k=1$ to maximum number of iterations
-    \begin{enumerate}
-      \item For $i=1$ to $n$
-        \begin{enumerate}
-        \item $x_i^{(k)} = 
-          \frac{b_i - \sum_{j=1}^{i-1}a_{ij}x_j^{(k)}
-          - \sum_{j=i+1}^{n}a_{ij}x_j^{(k-1)}}{a_{ii}}$
-        \item If $\|\vec{x}^{(k)}-\vec{x}^{(k-1)} < \epsilon\|$,
-          where $\epsilon$ is a specified stopping criteria, stop.
-      \end{enumerate}
-    \end{enumerate}
-\end{enumerate}
-}
-\end{algorithm}
-
-If you'd rather have the same numbering throughout the algorithm
-but still want the convenient indentation of nested 
-\texttt{enumerate} environments, you can use the
-\texttt{enumerate*} environment provided by the \textsf{jmlr}
-class. For example, see \algorithmref{alg:moore}.
-
-\begin{algorithm}
-\floatconts
-{alg:moore}% label
-{\caption{Moore's Shortest Path}}%caption
-{% main float content
-Given a connected graph $G$, where the length of each edge is 1:
-\begin{enumerate*}
-  \item Set the label of vertex $s$ to 0
-  \item Set $i=0$
-  \begin{enumerate*}
-    \item \label{step:locate}Locate all unlabelled vertices 
-          adjacent to a vertex labelled $i$ and label them $i+1$
-    \item If vertex $t$ has been labelled,
-    \begin{enumerate*}
-      \item[] the shortest path can be found by backtracking, and 
-      the length is given by the label of $t$.
-    \end{enumerate*}
-    otherwise
-    \begin{enumerate*}
-      \item[] increment $i$ and return to step~\ref{step:locate}
-    \end{enumerate*}
-  \end{enumerate*}
-\end{enumerate*}
-}
-\end{algorithm}
-
-Pseudo code can be displayed using the \texttt{algorithm2e}
-environment. This is defined by the \textsf{algorithm2e} package
-(which is automatically loaded) so check the \textsf{algorithm2e}
-documentation for further details.\footnote{Either \texttt{texdoc
-algorithm2e} or \url{http://www.ctan.org/pkg/algorithm2e}}
-For an example, see \algorithmref{alg:net}.
-
-\begin{algorithm2e}
-\caption{Computing Net Activation}
-\label{alg:net}
- % older versions of algorithm2e have \dontprintsemicolon instead
- % of the following:
- %\DontPrintSemicolon
- % older versions of algorithm2e have \linesnumbered instead of the
- % following:
- %\LinesNumbered
-\KwIn{$x_1, \ldots, x_n, w_1, \ldots, w_n$}
-\KwOut{$y$, the net activation}
-$y\leftarrow 0$\;
-\For{$i\leftarrow 1$ \KwTo $n$}{
-  $y \leftarrow y + w_i*x_i$\;
-}
-\end{algorithm2e}
-
-\section{Description Lists}
-
-The \textsf{jmlr} class also provides a description-like 
-environment called \texttt{altdescription}. This has an
-argument that should be the widest label in the list. Compare:
-\begin{description}
-\item[add] A method that adds two variables.
-\item[differentiate] A method that differentiates a function.
-\end{description}
-with
-\begin{altdescription}{differentiate}
-\item[add] A method that adds two variables.
-\item[differentiate] A method that differentiates a function.
+\begin{altdescription}{Phenomenon}
+	\item[Unknown] No experience has been attempted here.
+	\item[Occupied] The robot is placed here.
+	\item[Empty] The robot has been here in the past.
+	\item[Experience] One or several experiences have been placed here.
 \end{altdescription}
 
-\section{Theorems, Lemmas etc}
-\label{sec:theorems}
+Allocentric memory is used to construct a local spatial representation of the objects with which the robot is interacting.
+This representation is copied to a data structure called a \textit{phenomenon}.
 
-The following theorem-like environments are predefined by
-the \textsf{jmlr} class: \texttt{theorem}, \texttt{example},
-\texttt{lemma}, \texttt{proposition}, \texttt{remark}, 
-\texttt{corollary}, \texttt{definition}, \texttt{conjecture}
-and \texttt{axiom}. You can use the \texttt{proof} environment
-to display the proof if need be, as in \theoremref{thm:eigenpow}.
+We use the term phenomenon in its common sense: the perception by a cognitive beeing of ``something'' in the environment.
+In computer science, we comply with \cite{thorisson_explanation_2021}'s definition of ``Any useful grouping of a subset of spatio-temporal patterns experienced by an agent in an environment''.
 
-\begin{theorem}[Eigenvalue Powers]\label{thm:eigenpow}
-If $\lambda$ is an eigenvalue of $\vec{B}$ with eigenvector
-$\vec{\xi}$, then $\lambda^n$ is an eigenvalue of $\vec{B}^n$
-with eigenvector $\vec{\xi}$.
-\begin{proof}
-Let $\lambda$ be an eigenvalue of $\vec{B}$ with eigenvector
-$\xi$, then
-\begin{align*}
-\vec{B}\vec{\xi} &= \lambda\vec{\xi}
-\intertext{premultiply by $\vec{B}$:}
-\vec{B}\vec{B}\vec{\xi} &= \vec{B}\lambda\vec{\xi}\\
-\Rightarrow \vec{B}^2\vec{\xi} &= \lambda\vec{B}\vec{\xi}\\
-&= \lambda\lambda\vec{\xi}\qquad
-\text{since }\vec{B}\vec{\xi}=\lambda\vec{\xi}\\
-&= \lambda^2\vec{\xi}
-\end{align*}
-Therefore true for $n=2$. Now assume true for $n=k$:
-\begin{align*}
-\vec{B}^k\vec{\xi} &= \lambda^k\vec{\xi}
-\intertext{premultiply by $\vec{B}$:}
-\vec{B}\vec{B}^k\vec{\xi} &= \vec{B}\lambda^k\vec{\xi}\\
-\Rightarrow \vec{B}^{k+1}\vec{\xi} &= \lambda^k\vec{B}\vec{\xi}\\
-&= \lambda^k\lambda\vec{\xi}\qquad
-\text{since }\vec{B}\vec{\xi}=\lambda\vec{\xi}\\
-&= \lambda^{k+1}\vec{\xi}
-\end{align*}
-Therefore true for $n=k+1$. Therefore, by induction, true for all
-$n$.
-\end{proof}
-\end{theorem}
+In our implementation, the phenomenon data structure stores a local map of experiences afforded by the object. 
+This map is a subset of egocentric memory converted to a coordinate system centered on the phenomenon.
+This process of phenomenon inference is performed by the Synthesizer.
 
-\begin{lemma}[A Sample Lemma]\label{lem:sample}
-This is a lemma.
-\end{lemma}
+\subsection{The synthesizer}
+\label{sec:synthesizer}
 
-\begin{remark}[A Sample Remark]\label{rem:sample}
-This is a remark.
-\end{remark}
 
-\begin{corollary}[A Sample Corollary]\label{cor:sample}
-This is a corollary.
-\end{corollary}
+The synthesizer constructs a representation of an object by reading experiences from egocentric memory and filling and updating allocentric memory. 
+It works in coordination with the Decider (\sectionref{sec:decider}) to explore the object through different directions. 
 
-\begin{definition}[A Sample Definition]\label{def:sample}
-This is a definition.
-\end{definition}
+The synthesizer estimates the robot's position in allocentric memory through path integration. 
+It infers the presence of an object from repeated experiences in the same area. 
+Once an object has been identified with enough experiences, it can be isolated in allocentric memory and copied to a phenomenon data structure.
 
-\begin{conjecture}[A Sample Conjecture]\label{con:sample}
-This is a conjecture.
-\end{conjecture}
 
-\begin{axiom}[A Sample Axiom]\label{ax:sample}
-This is an axiom.
-\end{axiom}
+\subsection{The decider}
+\label{sec:decider}
 
-\begin{example}[An Example]\label{ex:sample}
-This is an example.
-\end{example}
 
-\section{Citations and Bibliography}
-\label{sec:cite}
+\section{Results}
 
-The \textsf{jmlr} class automatically loads \textsf{natbib}.
-This sample file has the citations defined in the accompanying
-BibTeX file \texttt{pmlr-sample.bib}. For a parenthetical
-citation use \verb|\citep|. For example
-\citep{guyon-elisseeff-03}. For a textual citation use
-\verb|\citet|. For example \citet{guyon2007causalreport}.
-Both commands may take a comma-separated list, for example
-\citet{guyon-elisseeff-03,guyon2007causalreport}.
+\section{Conclusion}
 
-These commands have optional arguments and have a starred
-version. See the \textsf{natbib} documentation for further
-details.\footnote{Either \texttt{texdoc natbib} or
-\url{http://www.ctan.org/pkg/natbib}}
+This example is meant to illustrate a more profound epistemological assumption that the world \textit{in itself} cannot be accessed through direct representational data. This idea goes back to Kant, relates to Piaget's developmental psychology and constructivist epistemology, and has echos in modern physics. 
+Kark Friston said that addressing this problem may open the door to the third wave of AI \cite[time code 22:66]{videoFriston}. 
 
-The bibliography is displayed using \verb|\bibliography|.
 
-\acks{Acknowledgements go here.}
 
-\bibliography{jmlr-sample}
+\bibliography{olivier}
 
-\appendix
-
-\section{First Appendix}\label{apd:first}
-
-This is the first appendix.
-
-\section{Second Appendix}\label{apd:second}
-
-This is the second appendix.
 
 \end{document}
