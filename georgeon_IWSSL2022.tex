@@ -52,35 +52,10 @@
  % Two authors with the same address
   \author{\Name{Olivier L. Georgeon} \Email{ogeorgeon@univ-catholyon.fr}\\
   \addr UR Confluence, Sciences et Humanités (EA 1598) - Lyon Catholic University, France\\
-   \Name{Titouan Knockaert} \Email{titouan.knockaert@gmail.com}\\
+  \Name{Titouan Knockaert} \Email{titouan.knockaert@gmail.com}\\
   \addr Université Claude Bernard Lyon 1, LIRIS CNRS UMR5205, F-69622 Villeurbanne, France
 }
 
- % Three or more authors with the same address:
- % \author{\Name{Author Name1} \Email{an1@sample.com}\\
- %  \Name{Author Name2} \Email{an2@sample.com}\\
- %  \Name{Author Name3} \Email{an3@sample.com}\\
- %  \Name{Author Name4} \Email{an4@sample.com}\\
- %  \Name{Author Name5} \Email{an5@sample.com}\\
- %  \Name{Author Name6} \Email{an6@sample.com}\\
- %  \Name{Author Name7} \Email{an7@sample.com}\\
- %  \Name{Author Name8} \Email{an8@sample.com}\\
- %  \Name{Author Name9} \Email{an9@sample.com}\\
- %  \Name{Author Name10} \Email{an10@sample.com}\\
- %  \Name{Author Name11} \Email{an11@sample.com}\\
- %  \Name{Author Name12} \Email{an12@sample.com}\\
- %  \Name{Author Name13} \Email{an13@sample.com}\\
- %  \Name{Author Name14} \Email{an14@sample.com}\\
- %  \addr Address}
-
-
- % Authors with different addresses:
- % \author{\Name{Author Name1} \Email{abc@sample.com}\\
- % \addr Address 1
- % \AND
- % \Name{Author Name2} \Email{xyz@sample.com}\\
- % \addr Address 2
- %}
 
 \editor{Editor's name}
  % \editors{List of editors' names}
@@ -90,10 +65,16 @@
 \maketitle
 
 \begin{abstract}
-This is the abstract for this article.
+We introduce the problem for a robot to  localize itself and simultaneously actively infer the existences and properties of surrounding \textit{phenomena} (SLAPI). 
+A phenomenon is a representation of an object ``as the robot experiences it'' through interaction. 
+We designed a proof-of-concept algorithm to illustrate the SLAPI problem. 
+We demonstrated it in a robot mounted on omnidirectional wheels and endowed with an echo-localization sensor, photosensitive sensors, and an inertial measurement unit, but no camera and lidar. 
+As the robot circles around an object, it constructs the phenomenon corresponding to this object under the form of the set of the spatially-localized control loops that the object affords to the robot. 
+SLAPI algorithms could be used to control robots that exhibit intrinsic motivation, for example curiosity and playfulness in their interaction with their environment. Moreover, they can shed some light on how cognitive beeing construct knowledge about object from sensorimotor experience of interaction.
 \end{abstract}
+
 \begin{keywords}
-List of keywords
+Constructivist learning; Active inference; Enaction; Autonomous robotics
 \end{keywords}
 
 \section{Introduction}
@@ -111,17 +92,9 @@ Possible applications may not include delivery tasks but may include entertainme
 
 SLAPI makes no assumption that landmarks can be directly and passively uniquely identified through sensors. 
 The robot must rather actively interact with objects, possibly from different angles and through different modalities of control loops, to categorize and recognize objects, and possibly use them as landmarks. 
-We call this process \textit{active phenomenon inference}, drawing from the work of \cite{friston_world_2021} on active inference. 
-Here the term \textit{phenomenon} refers to the knowledge of physical objects actively constructed by the robot from its point of view and ``as the robot experiences the object through interaction'' \citep{thorisson_explanation_2021}. 
+We call this process \textit{active phenomenon inference}, in line with \cite{friston_world_2021}'s theory of active inference. 
+% Here the term \textit{phenomenon} refers to the knowledge of physical objects actively constructed by the robot from its point of view and ``as the robot experiences the object through interaction'' \citep{thorisson_explanation_2021}. 
 
-We designed a proof-of-concept algorithm to illustrate the SLAPI problem. 
-We demonstrated it in a robot mounted on omnidirectional wheels and endowed with an echo-localization sensor, photosensitive sensors, and an inertial measurement unit, but no camera and lidar. 
-As the robot circles around an object, it constructs the phenomenon corresponding to this object under the form of the set of the spatially-localized control loops that the object affords to the robot. 
-New elements can be subsequently added to this set as the robot improves its knowledge of the object. 
-Results show that the robot drew out a few cries of amusement and endearment from some human observers, which encourages us to keep improving this range of algorithms. 
-
-Moreover, we believe that the study of SLAPI problems can shed some light on how animals construct knowledge of objects through sensorimotor interactions, while keeping this knowledge grounded in experience. 
-It can also provide an angle of attack to the more general AI problem of self-motivated open-ended learning in the real world.
 
 \section{The representational status of sensory data}
 \label{sec:input}
@@ -327,6 +300,7 @@ The synthesizer estimates the robot's position in allocentric memory through pat
 It infers the presence of an object from repeated experiences in the same area. 
 Once an object has been identified with enough experiences, it can be isolated in allocentric memory and copied to a phenomenon data structure.
 
+New elements can be subsequently added to this set as the robot improves its knowledge of the object. 
 
 \subsection{The decider}
 \label{sec:decider}
@@ -334,10 +308,21 @@ Once an object has been identified with enough experiences, it can be isolated i
 
 \section{Results}
 
+A representative run can be seen in video \citep{titouan_knockaert_demonstration_2022}. 
+It shows the robot circling around an object while constructing the local map representing the object to store in the phenomenon data structure.
+
+
+
 \section{Conclusion}
+
+Results show that the robot drew out a few cries of amusement and endearment from some human observers, which encourages us to keep improving this range of algorithms. 
+
+Moreover, we believe that the study of SLAPI problems can shed some light on how animals construct knowledge of objects through sensorimotor interactions, while keeping this knowledge grounded in experience. 
+It can also provide an angle of attack to the more general AI problem of self-motivated open-ended learning in the real world.
 
 This example is meant to illustrate a more profound epistemological assumption that the world \textit{in itself} cannot be accessed through direct representational data. This idea goes back to Kant, relates to Piaget's developmental psychology and constructivist epistemology, and has echos in modern physics. 
 Kark Friston said that addressing this problem may open the door to the third wave of AI \cite[time code 22:66]{videoFriston}. 
+
 
 
 
