@@ -65,8 +65,8 @@
 \maketitle
 
 \begin{abstract}
-We introduce the problem for a robot to  localize itself and simultaneously actively infer the existence and properties of \textit{phenomena} present in its surrounding environment: the SLAPI problem. 
-A phenomenon is a representation of an object ``as the robot experiences it'' through interaction. 
+We introduce the problem for a robot to  localize itself, and, simultaneously, actively infer the existence and properties of \textit{phenomena} present in its surrounding environment: the SLAPI problem. 
+A phenomenon is a representation of an entity ``as the robot experiences it'' through interaction. 
 The SLAPI problem relates to the SLAM problem but differs in that it doe not aim at constructing a precise map of the environment, and it can apply to robots with coarse sensors. 
 We demonstrated a SLAPI algorithm to control a robot equipped with omni-directional wheels, an echo-localization sensor, photosensitive sensors, and an inertial measurement unit, but no precise sensors like camera, lidar, or odometry. 
 As the robot circles around an object, it constructs the phenomenon corresponding to this object under the form of the set of the spatially-localized control loops of interaction that the object affords to the robot. 
@@ -75,7 +75,7 @@ Further studies of the SLAPI problem could improve the scientific understanding 
 \end{abstract}
 
 \begin{keywords}
-Constructivist learning; Active inference; Enaction; Autonomous robotics
+Constructivist learning; Active inference; Autonomous robotics, SLAM
 \end{keywords}
 
 \section{Introduction}
@@ -166,7 +166,7 @@ The \textit{Workspace} contains the \textit{Synthesizer} which infers the phenom
 \end{figure}
 
 
-\subsection{The primitive control loops implemented in the robot}
+\subsection{The control loops of interaction implemented in the robot}
 
 A C++ program on the robot's Arduino board handles the reception of the action, drives the control loop, and then returns the outcome through wifi. 
 \tableref{tab:action} lists the supported actions and outcomes.
@@ -316,16 +316,20 @@ It shows the robot circling around an object while constructing the local map re
 
 \section{Conclusion}
 
-Results show that the robot drew out a few cries of amusement and endearment from some human observers, which encourages us to keep improving this range of algorithms. 
+This paper presents the SLAPI problem: the problem for an autonomous artificial agent to construct knowledge about entities in its environment from sensorimotor experience of interaction.  
+This problem is particularly salient when the agent has rudimentary sensors that provide poor information about the features of the environment. 
+In this case, to be informative, sensory data should rather be considered as \textit{outcome} of a control loops rather than \textit{percepts}.
 
-Moreover, we believe that the study of SLAPI problems can shed some light on how animals construct knowledge of objects through sensorimotor interactions, while keeping this knowledge grounded in experience. 
-It can also provide an angle of attack to the more general AI problem of self-motivated open-ended learning in the real world.
+On the contrary, when the agent has rich sensors that allow the identification of features of the world, it is tempting for the developer of the agent's software to consider that sensory data carries representational information about the world. 
+Philosophy of mind, however, provide theoretical arguments against this representationalist hypothesis. 
+These arguments go back to Kant, who claimed that the world ``in itself'' is unknowable, and relate to Piaget's developmental psychology and constructivist epistemology. 
+They also have echos in modern physics. 
+If we trust these arguments, we can expect SLAPI algorithms to also bring value to agents that have rich sensors. 
+SLAPI algorithms could endow such agents with more autonomy in the way they construct their own knowledge of the world, and keep this knowledge grounded in their individual experience of interaction.
 
-This example is meant to illustrate a more profound epistemological assumption that the world \textit{in itself} cannot be accessed through direct representational data. This idea goes back to Kant, relates to Piaget's developmental psychology and constructivist epistemology, and has echos in modern physics. 
-Kark Friston said that addressing this problem may open the door to the third wave of AI \cite[time code 22:66]{videoFriston}. 
-
-
-
+We reported our implementation and experiment as an initial example to illustrate the SLAPI problem, in the hope that it provides clarification. 
+We hope that future algorithms will address more complex problems of phenomenal inference, such as categorization and recognition of similarities and differences between types of phenomena. 
+In return, we hope that such studies can inform research in neuroscience on how animals construct knowledge of objects through their experience of interaction.
 
 \bibliography{olivier}
 
