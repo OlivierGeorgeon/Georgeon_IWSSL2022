@@ -65,12 +65,13 @@
 \maketitle
 
 \begin{abstract}
-We introduce the problem for a robot to  localize itself and simultaneously actively infer the existences and properties of surrounding \textit{phenomena} (SLAPI). 
+We introduce the problem for a robot to  localize itself and simultaneously actively infer the existence and properties of \textit{phenomena} present in its surrounding environment: the SLAPI problem. 
 A phenomenon is a representation of an object ``as the robot experiences it'' through interaction. 
-We designed a proof-of-concept algorithm to illustrate the SLAPI problem. 
-We demonstrated it in a robot mounted on omnidirectional wheels and endowed with an echo-localization sensor, photosensitive sensors, and an inertial measurement unit, but no camera and lidar. 
-As the robot circles around an object, it constructs the phenomenon corresponding to this object under the form of the set of the spatially-localized control loops that the object affords to the robot. 
-SLAPI algorithms could be used to control robots that exhibit intrinsic motivation, for example curiosity and playfulness in their interaction with their environment. Moreover, they can shed some light on how cognitive beeing construct knowledge about object from sensorimotor experience of interaction.
+The SLAPI problem relates to the SLAM problem but differs in that it doe not aim at constructing a precise map of the environment, and it can apply to robots with coarse sensors. 
+We demonstrated a SLAPI algorithm to control a robot equipped with omni-directional wheels, an echo-localization sensor, photosensitive sensors, and an inertial measurement unit, but no precise sensors like camera, lidar, or odometry. 
+As the robot circles around an object, it constructs the phenomenon corresponding to this object under the form of the set of the spatially-localized control loops of interaction that the object affords to the robot. 
+SLAPI algorithms could help design pet robots that exhibit intrinsic motivation such as curiosity and playfulness with toys. 
+Further studies of the SLAPI problem could improve the scientific understanding of how cognitive beings construct knowledge about objects from sensorimotor experience of interaction.
 \end{abstract}
 
 \begin{keywords}
