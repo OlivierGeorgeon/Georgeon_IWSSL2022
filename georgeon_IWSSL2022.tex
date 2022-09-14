@@ -275,9 +275,9 @@ Each cell stores the list of experiences in a particular place, and can have one
 
 \begin{altdescription}{Phenomenon}
 	\item[Unknown] No experience has been attempted here.
-	\item[Occupied] The robot is placed here.
+	\item[Occupied] The robot is localized here.
 	\item[Empty] The robot has been here in the past.
-	\item[Experience] One or several experiences have been placed here.
+	\item[Experience] One or several experiences have been localized here.
 \end{altdescription}
 
 Allocentric memory is used to construct a local spatial representation of the objects with which the robot is interacting.
@@ -310,22 +310,33 @@ New elements can be subsequently added to this set as the robot improves its kno
 \section{Results}
 
 A representative run can be seen in video \citep{titouan_knockaert_demonstration_2022}. 
-It shows the robot circling around an object while constructing the local map representing the object to store in the phenomenon data structure.
+It shows the robot circling around an object while constructing the local map representing the object to store in the phenomenon data structure. 
+It is worth noting that many human observers attribute the intention of the robot to carefully observe the object due to the fact that it keeps its head pointing to the object. 
+\figureref{fig:results} reports two different phenomena constructed with two kinds of object: an object that affords echo and shock (top), and an object that also affords line detection (bottom).
 
+\begin{figure}[htbp]
+	% Caption and label go in the first argument and the figure contents
+	% go in the second argument
+	\floatconts
+	{fig:results}
+	{\caption{Left: the robot and the object seen by the human observer.
+			  Right: the phenomenon constructed by the robot is a representation of the object as the robot experiences it through interaction. Top: the object affords echo (orange cells) and schock (red cells). Bottom: the object also affords line detection (black cells). Green cells represent empty space.}}
+	{\includegraphics[width=0.8\linewidth]{images/Figure_3_resultats}}
+\end{figure}
 
 
 \section{Conclusion}
 
 This paper presents the SLAPI problem: the problem for an autonomous artificial agent to construct knowledge about entities in its environment from sensorimotor experience of interaction.  
 This problem is particularly salient when the agent has rudimentary sensors that provide poor information about the features of the environment. 
-In this case, to be informative, sensory data should rather be considered as \textit{outcome} of a control loops rather than \textit{percepts}.
+In this case, to be informative, sensory data should rather be considered as \textit{outcome} of a control loop than \textit{percepts}.
 
 On the contrary, when the agent has rich sensors that allow the identification of features of the world, it is tempting for the developer of the agent's software to consider that sensory data carries representational information about the world. 
 Philosophy of mind, however, provide theoretical arguments against this representationalist hypothesis. 
 These arguments go back to Kant, who claimed that the world ``in itself'' is unknowable, and relate to Piaget's developmental psychology and constructivist epistemology. 
 They also have echos in modern physics. 
 If we trust these arguments, we can expect SLAPI algorithms to also bring value to agents that have rich sensors. 
-SLAPI algorithms could endow such agents with more autonomy in the way they construct their own knowledge of the world, and keep this knowledge grounded in their individual experience of interaction.
+They could endow such agents with more autonomy in the way they construct their own knowledge of the world, and keep this knowledge grounded in their individual experience of interaction.
 
 We reported our implementation and experiment as an initial example to illustrate the SLAPI problem, in the hope that it provides clarification. 
 We hope that future algorithms will address more complex problems of phenomenal inference, such as categorization and recognition of similarities and differences between types of phenomena. 
