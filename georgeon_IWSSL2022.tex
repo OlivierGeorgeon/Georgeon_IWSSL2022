@@ -127,21 +127,25 @@ In return, the software receives an outcome associated with spatial information 
 Note that the constructivist hypothesis accepts that the outcome may sometimes register features of the environment but only avoids baking this assumption in the algorithm \textit{a priori}. 
 \cite{rudrauf_mathematical_2017} have also proposed an active inference model related to the constructivist hypothesis. He states that ``All we need here is the idea that in one way or another the sensory organs provide an independent source of input and correction for the continually updated world model'' (p. 19).
 
+
 \section{The experimental setup}
 \label{sec:experiment}
 
 We use the robot cat of brand Osoyoo\footnote{\url{https://osoyoo.com/2019/11/08/omni-direction-mecanum-wheel-robotic-kit-v1/}}, to which we added an inertial measurement unit (\figureref{fig:robot}). 
 We set up an environment with black lines on the floor and various objects that can be detected through the echo-localization sensor. 
-Our goal is to design a robot that explores such environment and constructs knowledge of the objects that it encounters to exhibit behaviors that look interesting to human observers. 
+There is not final target to reach. We only want the robot to explore its environment. 
 
 \begin{figure}[htbp]
 	% Caption and label go in the first argument and the figure contents
 	% go in the second argument
 	\floatconts
 	{fig:robot}
-	{\caption{The experimental setup. Osoyoo robots, a black line on the floor, and various objects detectable through echo-localization.}}
+	{\caption{The experimental setup. 
+			Osoyoo robots, a black line on the floor, and various objects detectable through echo-localization.
+		    The omni-directional wheels allow the robot to translate laterally.}}
 	{\includegraphics[width=0.8\linewidth]{images/Figure_1_Robotb}}
 \end{figure}
+
 
 \section{The software architecture and algorithm}
 \label{sec:software}
@@ -150,7 +154,7 @@ We implemented the cognitive architecture on a remote PC as depicted in \figurer
 This architecture takes the place of the \textit{Software} in \figureref{fig:cycle}, whereas the robot plus its environment takes the place of the \textit{World}.
 
 The architecture follows a regular Model-View-Controller design pattern in which the \textit{Memory} plays the role of the database, and the \textit{Workspace} plays the role of the Model. 
-The \textit{Memory} contains the Egocentric memory and the Allocentric memory which are displayed on screen via the \textit{View Controllers} (\figureref{fig:architecture}, right).
+As we will further develop, the \textit{Memory} contains the Egocentric memory and the Allocentric memory which are displayed on screen via the \textit{View Controllers} (\figureref{fig:architecture}, right).
 The \textit{Workspace} contains the \textit{Synthesizer} which infers the phenomena, and the \textit{Decider} which selects the next action to send to the robot through wifi. 
 
 \begin{figure}[htbp]
@@ -174,9 +178,9 @@ A C++ program on the robot's Arduino board handles the reception of the action, 
 The reception of an action triggers the enaction of the corresponding control loop until its termination condition.
 For example, the \texttt{Forward} action sets the robot in motion. 
 It has three possible termination conditions: 
-\texttt{Default}: Time out of 1 second (approximately 20 cm traveled).
-\texttt{Line detection}: The floor sensor detects a line; the robot retreats back for a few centimeters. 
-\texttt{Shock}: The inertial measurement unit detects a strong deceleration indicating a shock with a solid object.
+\texttt{Default}: time out of 1 second (approximately 20 cm traveled);
+\texttt{Line detection}: the floor sensor detects a line causing the robot to retreat back for a few centimeters; and
+\texttt{Shock}: the inertial measurement unit detects a strong deceleration indicating a shock against an object.
 
 
 \begin{table}[htbp]
@@ -301,16 +305,24 @@ The synthesizer estimates the robot's position in allocentric memory through pat
 It infers the presence of an object from repeated experiences in the same area. 
 Once an object has been identified with enough experiences, it can be isolated in allocentric memory and copied to a phenomenon data structure.
 
-New elements can be subsequently added to this set as the robot improves its knowledge of the object. 
-
 \subsection{The decider}
 \label{sec:decider}
+
+The cognitive architecture stores a list of behaviors that define patterns of behaviors as \textit{sequences of experiences} that the robot can enact. 
+After each interaction cycle, the decider searches this list and activates the behaviors whose beginning sub-sequence matches experiences present in egocentric memory. 
+The activated behaviors then propose their ending sub-sequences for further enaction. 
+Finally the decider selects the continuing sub-sequence that is proposed with the highest weight. 
+We have presented this mechanism in previous studies \citep{georgeon_eca_2013}, where we explained how the list of behaviors could be learned by a bottom-up sequential learning mechanism driven by intrinsic motivation. 
+
+In the present study, we have initialized the list of behaviors with predefined behavioral patterns that give the robot a tendency to circle around objects when it detects them. 
+The robot wanders randomly until it detects an object nearby, and then it circles around this object until it is removed by the experimenter. 
 
 
 \section{Results}
 
-\figureref{fig:results} reports two different phenomena constructed with two kinds of object: an object that affords echo and shock (top), and an object that also affords line detection (bottom).
-A representative run can be seen in video \citep{titouan_knockaert_demonstration_2022} showing the robot circling around the object while constructing the egocentric and allocentric maps. 
+\figureref{fig:results} reports two different phenomena constructed from two kinds of object: an object that affords echo and shock (top), and an object that also affords line detection (bottom).
+A representative run can be seen in video \citep{titouan_knockaert_demonstration_2022}.
+It shows the robot circling around the object while constructing the egocentric and allocentric maps. 
 It is worth noting that many human observers attribute the intention of the robot to carefully observe the object due to the fact that it keeps its head pointing to the object. 
 
 \begin{figure}[htbp]
@@ -324,7 +336,7 @@ It is worth noting that many human observers attribute the intention of the robo
 			  Top: the object affords echo (orange cells) and shock (red cells). 
 			  Bottom: the object also affords line detection (black cells). 
 			  Green cells represent empty space.}}
-	{\includegraphics[width=0.8\linewidth]{images/Figure_3_resultats}}
+	{\includegraphics[width=0.6\linewidth]{images/Figure_3_resultats}}
 \end{figure}
 
 
