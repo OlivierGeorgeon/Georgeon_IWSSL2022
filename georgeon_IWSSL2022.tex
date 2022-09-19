@@ -90,7 +90,7 @@ SLAM algorithms are tailored to the available resources: odometric sensors, sens
 When displacements are imprecise and odometric data is not available, when landmarks are not directly identifiable, and below a certain level of scarcity and noise in the sensory data relative to the environment’s complexity, it becomes difficult to perform SLAM accurately enough to use the robot for tasks involving complex navigation \citep{gay_towards_2021}. 
 For such robots, we propose the SLAPI problem:  Simultaneous Localization and Active Phenomenon Inference.
 In contrast with SLAM, SLAPI does not aim at constructing a map to use for navigation. 
-Instead, it aims at organizing behavior spatially in the vicinity of objects to design robots that mimic intrinsic motivation \citep[e.g.,][]{gottlieb_towards_2018} such as playfulness and curiosity as they discover and interact with unknown objects. 
+Instead, it aims at organizing behavior spatially in the vicinity of objects to design robots that mimic intrinsic motivation such as playfulness and curiosity as they discover and interact with unknown objects \citep[e.g.,][]{oudeyer_intrinsic_2007}. 
 Possible applications may not include delivery tasks but may include entertainment and games, similar to playing with pets. 
 
 SLAPI makes no assumption that landmarks can be directly and passively uniquely identified through sensors. 
@@ -146,7 +146,7 @@ There is not final target to reach. We only want the robot to explore its enviro
 	{fig:robot}
 	{\caption{The experimental setup. 
 			Osoyoo robots, a black line on the floor, and various objects detectable through echo-localization.
-		    The omni-directional wheels allow the robot to translate laterally.}}
+		    The omni-directional wheels allow the robot to translate laterally (sweep right or left).}}
 	{\includegraphics[width=0.8\linewidth]{images/Figure_1_Robotb}}
 \end{figure}
 
@@ -159,7 +159,7 @@ This architecture takes the place of the \textit{Software} in \figureref{fig:cyc
 
 The architecture follows a regular Model-View-Controller design pattern in which the \textit{Memory} plays the role of the database, and the \textit{Workspace} plays the role of the Model. 
 As we will further develop, the \textit{Memory} contains the Egocentric memory and the Allocentric memory which are displayed on screen via the \textit{View Controllers} (\figureref{fig:architecture}, right).
-The \textit{Workspace} contains the \textit{Synthesizer} which infers the phenomena, and the \textit{Decider} which selects the next action to send to the robot through wifi. 
+The \textit{Workspace} contains the \textit{Decider} which implements the robot's policy, and the \textit{Synthesizer} which infers the phenomena. 
 
 \begin{figure}[htbp]
 	% Caption and label go in the first argument and the figure contents
@@ -200,8 +200,8 @@ It has three possible termination conditions:
 				\midrule
 				\texttt{Forward} & \multirow{4}{2.5cm}{During 1 sec. or until shock or line detection}\\
 				\texttt{Backward} &  \\
-				\texttt{Shift left} &  \\
-				\texttt{Shift right} & \\ \hline
+				\texttt{Sweep left} &  \\
+				\texttt{Sweep right} & \\ \hline
 				\texttt{Turn left} & $\pi/4$ \\
 				\texttt{Turn right} & $-\pi/4$ \\ \hline
 				\texttt{Head scan} & $[-\pi/2, \pi/2]$ \\
@@ -239,9 +239,9 @@ It also gives the human observer the impression that the robot keeps it attentio
 
 The robot also returns additional information to the cognitive architecture: the yaw, azimuth (angle relative to the north) and duration of the various phases of the control loop. 
 The cognitive architecture uses this information to update the spatial memory based on the robot's displacement. 
-Moreover, the robot's program controls the head so that it aligns itself towards the nearest echo. 
+The termination phase of the control loop aligns the robot's head towards the nearest echo. 
 The robot then returns the nearest echo measure along with the head direction. 
-The cognitive architecure uses this information to mark the position of echos in spatial memory. 
+The cognitive architecture uses this information to mark the position of the echo in spatial memory. 
 This will be used to infer the presence of an object in the area. 
 \tableref{tab:dialogue} summarizes the data exchanged between the PC and the robot.
 
@@ -263,23 +263,24 @@ This will be used to infer the presence of an object in the area.
 
 \subsection{The egocentric memory}
 
-The egocentric memory stores the robot's \textit{experiences} in a coordinate system centered on the robot.
+The egocentric memory is a short-term memory of the experiences of interaction in the surrounding of the robot. 
 It is inspired by the brain's egocentric cells located in the superior colliculus \citep{grieves_representation_2017}.
 
+Technically, it stores the robot's \textit{experiences} in a coordinate system centered on the robot.
 An experience is a data structure that contains the action, the outcome, the position in space relative to the robot, and the timestamp. 
-The position in space corresponds to where the interaction took place, for example under the floor sensors for a line detection, or at the estimated origin of an echo. 
-The positions of experiences are updated with the robot's displacement on each interaction cycle. 
-
-Of course, errors accumulate causing a drift in the position of experiences, making them unreliable after a few cycles. 
-In the screen display (\figureref{fig:architecture}, top right), we make them fade away and disappear after 5 cycles.  
+Our implementation initializes the position in space from a hard-coded model of the robot: line-detection experiences are placed at the position of the floor sensors; echo experiences are placed at the estimated origin of the echo using head direction and measure of echo distance.  
+When the robot moves, the positions of experiences are then moved opposite by the robot's estimated displacement (\figureref{fig:architecture}, top right). 
+Of course, errors accumulate causing a drift in egocentric memory. 
+With our robot, we observed that the position of experiences were unreliable after 5 to 10 interaction cycles.
 
 
 \subsection{The allocentric memory}
 
 The allocentric memory stores a spatial representation in a coordinate system relative the environment. 
 It is inspired by \textit{grid cells} in the hippocampus of the mammalian brain \citep{grieves_representation_2017}.
-Like natural grid cells, we implemented an hexagonal cell grid (\figureref{fig:architecture}, bottom right). 
-Each cell stores the list of experiences in a particular place, and can have one of the following status:
+
+Our implementation reproduces the grid cell's hexagonal structure (\figureref{fig:architecture}, bottom right). 
+Each cell stores the list of experiences enacted in the location referenced by the cell, and can have one of the following status:
 
 \begin{altdescription}{Phenomenon}
 	\item[Unknown] No experience has been attempted here.
@@ -289,7 +290,31 @@ Each cell stores the list of experiences in a particular place, and can have one
 \end{altdescription}
 
 Allocentric memory is used to construct a local spatial representation of the objects with which the robot is interacting.
-This representation is copied to a data structure called a \textit{phenomenon}.
+It keeps track of the robot's position through path integration. 
+It informs the next action to select by the \textit{Decider}, and constitutes the base for phenomenal inference performed by the \textit{Synthesizer}. 
+
+\subsection{The decider}
+\label{sec:decider}
+
+The Decider implements the policy that selects the action for the robot to enact. 
+There is an nascent literature on how to model an information-seeking policy inspired by animal behavior \citep[e.g.,][]{gottlieb_towards_2018}.
+The choice and the implementation of such policy is a part of the SLAPI problem. 
+
+Here we propose a proof of concept based upon a cognitive architecture that we have implemented previously \citep{georgeon_eca_2013}.
+The cognitive architecture stores a \textit{list of behaviors} in the form of \textit{sequences of experiences} that the robot can enact. 
+After each interaction cycle, the decider searches this list and activates the sequence of experience whose beginning sub-sequence matches experiences present in memory. 
+The activated behaviors then propose their ending sub-sequences for further enaction. 
+Finally the decider selects the continuing sub-sequence that is proposed with the highest weight. 
+
+In the present study, we have initialized the list of behaviors with predefined behavioral patterns that give the robot a tendency to circle around objects when it detects them. 
+The robot wanders randomly until it detects an object nearby, and then it circles around this object until the experimenter removes the object. 
+
+
+\subsection{The synthesizer}
+\label{sec:synthesizer}
+
+
+Once an object has been identified in allocentric memory, the synthesizer copies its representation to a data structure called a \textit{phenomenon}.
 
 We use the term phenomenon in its common sense: the perception by a cognitive beeing of ``something'' in the environment.
 In computer science, we comply with \cite{thorisson_explanation_2021}'s definition of ``Any useful grouping of a subset of spatio-temporal patterns experienced by an agent in an environment''.
@@ -298,29 +323,11 @@ In our implementation, the phenomenon data structure stores a local map of exper
 This map is a subset of egocentric memory converted to a coordinate system centered on the phenomenon.
 This process of phenomenon inference is performed by the Synthesizer.
 
-\subsection{The synthesizer}
-\label{sec:synthesizer}
-
-
 The synthesizer constructs a representation of an object by reading experiences from egocentric memory and filling and updating allocentric memory. 
 It works in coordination with the Decider (\sectionref{sec:decider}) to explore the object through different directions. 
 
-The synthesizer estimates the robot's position in allocentric memory through path integration. 
 It infers the presence of an object from repeated experiences in the same area. 
 Once an object has been identified with enough experiences, it can be isolated in allocentric memory and copied to a phenomenon data structure.
-
-\subsection{The decider}
-\label{sec:decider}
-
-The cognitive architecture stores a list of behaviors that define patterns of behaviors as \textit{sequences of experiences} that the robot can enact. 
-After each interaction cycle, the decider searches this list and activates the behaviors whose beginning sub-sequence matches experiences present in egocentric memory. 
-The activated behaviors then propose their ending sub-sequences for further enaction. 
-Finally the decider selects the continuing sub-sequence that is proposed with the highest weight. 
-We have presented this mechanism in previous studies \citep{georgeon_eca_2013}, where we explained how the list of behaviors could be learned by a bottom-up sequential learning mechanism driven by intrinsic motivation. 
-
-In the present study, we have initialized the list of behaviors with predefined behavioral patterns that give the robot a tendency to circle around objects when it detects them. 
-The robot wanders randomly until it detects an object nearby, and then it circles around this object until it is removed by the experimenter. 
-
 
 \section{Results}
 
