@@ -154,8 +154,8 @@ There is not final target to reach. We only want the robot to explore its enviro
 \section{The software architecture and algorithm}
 \label{sec:software}
 
-We implemented the cognitive architecture on a remote PC as depicted in \figureref{fig:architecture}. 
-This architecture takes the place of the \textit{Software} in \figureref{fig:cycle}, whereas the robot plus its environment takes the place of the \textit{World}.
+As a proof of concept to illustrate the SLAPI problem, we implemented the cognitive architecture depicted in \figureref{fig:architecture}. 
+This architecture is implemented on a remote PC and takes the place of the \textit{Software} in \figureref{fig:cycle}. The robot plus its environment takes the place of the \textit{World}.
 
 The architecture follows a regular Model-View-Controller design pattern in which the \textit{Memory} plays the role of the database, and the \textit{Workspace} plays the role of the Model. 
 As we will further develop, the \textit{Memory} contains the Egocentric memory and the Allocentric memory which are displayed on screen via the \textit{View Controllers} (\figureref{fig:architecture}, right).
@@ -296,38 +296,28 @@ It informs the next action to select by the \textit{Decider}, and constitutes th
 \subsection{The decider}
 \label{sec:decider}
 
-The Decider implements the policy that selects the action for the robot to enact. 
-There is an nascent literature on how to model an information-seeking policy inspired by animal behavior \citep[e.g.,][]{gottlieb_towards_2018}.
-The choice and the implementation of such policy is a part of the SLAPI problem. 
+The Decider implements the policy that selects the robot's actions. 
+For our proof of concept, we used an algorithm we designed previously \citep{georgeon_eca_2013}.
+It stores a \textit{list of behaviors} in the form of \textit{sequences of experiences} that the robot can enact. 
+After each interaction cycle, the Decider activates the sequences in this list whose beginning sub-sequence matches experiences present in memory. 
+The activated sequences then propose their ending sub-sequences for further enaction with a weight. 
+Finally the Decider selects the sub-sequence that is proposed with the highest weight. 
+We have initialized the list of behaviors with predefined behavioral patterns that give the robot a tendency to circle around objects when it detects them. 
 
-Here we propose a proof of concept based upon a cognitive architecture that we have implemented previously \citep{georgeon_eca_2013}.
-The cognitive architecture stores a \textit{list of behaviors} in the form of \textit{sequences of experiences} that the robot can enact. 
-After each interaction cycle, the decider searches this list and activates the sequence of experience whose beginning sub-sequence matches experiences present in memory. 
-The activated behaviors then propose their ending sub-sequences for further enaction. 
-Finally the decider selects the continuing sub-sequence that is proposed with the highest weight. 
-
-In the present study, we have initialized the list of behaviors with predefined behavioral patterns that give the robot a tendency to circle around objects when it detects them. 
-The robot wanders randomly until it detects an object nearby, and then it circles around this object until the experimenter removes the object. 
-
+With this policy, the robot wanders randomly until it detects an object nearby, and then it circles around this object until the experimenter removes the object. 
+This is sufficient for our demo. 
+More complex information-seeking policies could be used. 
+\cite{gottlieb_towards_2018} provide a recent literature review on this regard. 
 
 \subsection{The synthesizer}
 \label{sec:synthesizer}
 
+We called this process Synthesizer because it synthesizes a set of experiences into a single data structure that represents the object that affords these experiences. 
+We called this data structure a \textit{phenomenon} in compliance with the common sense of this term: the perception by a cognitive being of ``something'' in the environment.
+\cite{thorisson_explanation_2021}'s provided a more technical definition that also matches our usage: ``any useful grouping of a subset of spatio-temporal patterns experienced by an agent in an environment''.
 
-Once an object has been identified in allocentric memory, the synthesizer copies its representation to a data structure called a \textit{phenomenon}.
-
-We use the term phenomenon in its common sense: the perception by a cognitive beeing of ``something'' in the environment.
-In computer science, we comply with \cite{thorisson_explanation_2021}'s definition of ``Any useful grouping of a subset of spatio-temporal patterns experienced by an agent in an environment''.
-
-In our implementation, the phenomenon data structure stores a local map of experiences afforded by the object. 
-This map is a subset of egocentric memory converted to a coordinate system centered on the phenomenon.
-This process of phenomenon inference is performed by the Synthesizer.
-
-The synthesizer constructs a representation of an object by reading experiences from egocentric memory and filling and updating allocentric memory. 
-It works in coordination with the Decider (\sectionref{sec:decider}) to explore the object through different directions. 
-
-It infers the presence of an object from repeated experiences in the same area. 
-Once an object has been identified with enough experiences, it can be isolated in allocentric memory and copied to a phenomenon data structure.
+Once the robot has circled around an abject, the object becomes identified as a single entity, then the synthesizer copies its representation from allocentric memory to the phenomenon data structure.
+The phenomenon thus stores a local map of experiences afforded by the object. 
 
 \section{Results}
 
