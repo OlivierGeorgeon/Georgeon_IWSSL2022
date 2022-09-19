@@ -54,7 +54,7 @@
   \addr UR Confluence, Sciences et Humanités (EA 1598) - Lyon Catholic University, France\\
   \Name{Titouan Knockaert} \Email{titouan.knockaert@gmail.com}\\
   \addr Université Claude Bernard Lyon 1, LIRIS CNRS UMR5205, F-69622 Villeurbanne, France\\
-  \Name{Juan Vidal} \Email{jvidal@univ-catholyon.fr}\\
+  \Name{Juan R. Vidal} \Email{jvidal@univ-catholyon.fr}\\
   \addr UR Confluence, Sciences et Humanités (EA 1598) - Lyon Catholic University, France
 }
 
@@ -268,10 +268,10 @@ It is inspired by the brain's egocentric cells located in the superior colliculu
 
 Technically, it stores the robot's \textit{experiences} in a coordinate system centered on the robot.
 An experience is a data structure that contains the action, the outcome, the position in space relative to the robot, and the timestamp. 
-Our implementation initializes the position in space from a hard-coded model of the robot: line-detection experiences are placed at the position of the floor sensors; echo experiences are placed at the estimated origin of the echo using head direction and measure of echo distance.  
+Our implementation initializes the position from a hard-coded model of the robot: line-detection experiences are placed at the position of the floor sensors; echo experiences are placed at the estimated origin of the echo using head direction and measure of echo distance.  
 When the robot moves, the positions of experiences are then moved opposite by the robot's estimated displacement (\figureref{fig:architecture}, top right). 
 Of course, errors accumulate causing a drift in egocentric memory. 
-With our robot, we observed that the position of experiences were unreliable after 5 to 10 interaction cycles.
+In our experiment, we observed that the position of experiences were unreliable after 5 to 10 interaction cycles.
 
 
 \subsection{The allocentric memory}
