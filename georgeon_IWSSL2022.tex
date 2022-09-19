@@ -234,15 +234,15 @@ It has three possible termination conditions:
 
 Besides the action code, the cognitive architecture sends two more values to the robot: the coordinates of a focus point, and an estimated speed. 
 The robot's program uses these to keep the robot's head aligned towards the focus point during the robot's displacement. 
-This helps the robot keep tracks of objects over various moves. 
+This helps the robot keep track of objects over various moves. 
 It also gives the human observer the impression that the robot keeps it attention to a particular object, making it look more alive. 
 
-The robot also returns additional information to the cognitive architecture: the yaw, azimuth (angle relative to the north) and duration of the various phases of the control loop. 
+The robot also returns additional information to the cognitive architecture: yaw, azimuth (angle relative to the north), and duration of the various phases of the control loop. 
 The cognitive architecture uses this information to update the spatial memory based on the robot's displacement. 
 The termination phase of the control loop aligns the robot's head towards the nearest echo. 
-The robot then returns the nearest echo measure along with the head direction. 
+The robot then also returns the nearest echo measure along with the head direction. 
 The cognitive architecture uses this information to mark the position of the echo in spatial memory. 
-This will be used to infer the presence of an object in the area. 
+This will be used to infer the presence of an object when multiple echos are localized in the same area. 
 \tableref{tab:dialogue} summarizes the data exchanged between the PC and the robot.
 
 \begin{table}[htbp]
