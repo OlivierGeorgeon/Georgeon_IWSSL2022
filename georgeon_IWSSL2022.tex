@@ -158,8 +158,8 @@ As a proof of concept to illustrate the SLAPI problem, we implemented the cognit
 This architecture is implemented on a remote PC and takes the place of the \textit{Software} in \figureref{fig:cycle}. The robot plus its environment takes the place of the \textit{World}.
 
 The architecture follows a regular Model-View-Controller design pattern in which the \textit{Memory} plays the role of the database, and the \textit{Workspace} plays the role of the Model. 
-As we will further develop, the \textit{Memory} contains the Egocentric memory and the Allocentric memory which are displayed on screen via the \textit{View Controllers} (\figureref{fig:architecture}, right).
-The \textit{Workspace} contains the \textit{Decider} which implements the robot's policy, and the \textit{Synthesizer} which infers the phenomena. 
+As we will further develop, the \textit{Memory} contains the egocentric memory and the allocentric memory which are displayed on screen via the \textit{View Controllers} (\figureref{fig:architecture}, right).
+The \textit{Workspace} contains the \textit{Decider} which implements the robot's policy, and the \textit{Integrator} which infers the phenomena. 
 
 \begin{figure}[htbp]
 	% Caption and label go in the first argument and the figure contents
@@ -178,14 +178,6 @@ The \textit{Workspace} contains the \textit{Decider} which implements the robot'
 
 A C++ program on the robot's Arduino board handles the reception of the action, drives the control loop, and then returns the outcome through wifi. 
 \tableref{tab:action} lists the supported actions and outcomes.
-
-The reception of an action triggers the enaction of the corresponding control loop until its termination condition.
-For example, the \texttt{Forward} action sets the robot in motion. 
-It has three possible termination conditions: 
-\texttt{Default}: time out of 1 second (approximately 20 cm traveled);
-\texttt{Line detection}: the floor sensor detects a line causing the robot to retreat back for a few centimeters; and
-\texttt{Shock}: the inertial measurement unit detects a strong deceleration indicating a shock against an object.
-
 
 \begin{table}[htbp]
 	\floatconts
@@ -231,6 +223,13 @@ It has three possible termination conditions:
 		}
 	}
 \end{table}
+
+The reception of an action triggers the enaction of the corresponding control loop until its termination condition.
+For example, the \texttt{Forward} action sets the robot in motion. 
+It has three possible termination conditions: 
+\texttt{Default}: time out of 1 second (approximately 20 cm traveled);
+\texttt{Line detection}: the floor sensor detects a line causing the robot to retreat back for a few centimeters; and
+\texttt{Shock}: the inertial measurement unit detects a strong deceleration indicating a shock against an object.
 
 Besides the action code, the cognitive architecture sends two more values to the robot: the coordinates of a focus point, and an estimated speed. 
 The robot's program uses these to keep the robot's head aligned towards the focus point during the robot's displacement. 
@@ -291,7 +290,7 @@ Each cell stores the list of experiences enacted in the location referenced by t
 
 Allocentric memory is used to construct a local spatial representation of the objects with which the robot is interacting.
 It keeps track of the robot's position through path integration. 
-It informs the next action to select by the \textit{Decider}, and constitutes the base for phenomenal inference performed by the \textit{Synthesizer}. 
+It informs the next action to select by the \textit{Decider}, and constitutes the base for phenomenal inference performed by the \textit{Integrator}. 
 
 \subsection{The decider}
 \label{sec:decider}
@@ -309,15 +308,14 @@ This is sufficient for our demo.
 More complex information-seeking policies could be used. 
 \cite{gottlieb_towards_2018} provide a recent literature review on this regard. 
 
-\subsection{The synthesizer}
-\label{sec:synthesizer}
+\subsection{The phenomenon integrator}
 
-We called this process Synthesizer because it synthesizes a set of experiences into a single data structure that represents the object that affords these experiences. 
+We called this process Integrator because it integrates a heterogeneous set of experiences into a single data structure that represents the object that affords these experiences. 
 We called this data structure a \textit{phenomenon} in compliance with the common sense of this term: the perception by a cognitive being of ``something'' in the environment.
 \cite{thorisson_explanation_2021}'s provided a more technical definition that also matches our usage: ``any useful grouping of a subset of spatio-temporal patterns experienced by an agent in an environment''.
 
 
-Once the robot has circled around an abject, the object becomes identified as a single entity, then the synthesizer copies its representation from allocentric memory to the phenomenon data structure.
+Once the robot has circled around an abject, the object becomes identified as a single entity, then the Integrator copies its representation from allocentric memory to the phenomenon data structure.
 The phenomenon thus stores a local map of experiences afforded by the object. 
 
 Notably, these action-related representations of objects resemble \textit{action codes} that have been found in parietal regions of the cerebral cortex of humans and other primates \citep{chao_representation_2000,colby_space_1999, schubotz_objects_2014}. 
@@ -362,7 +360,7 @@ They could endow such agents with more autonomy in the way they construct their 
 We reported our implementation and experiment as an initial example to illustrate the SLAPI problem, in the hope that it provides clarification. 
 We hope that future models will address more complex problems of phenomenal inference, such as categorization and recognition of similarities and differences between types of phenomena. 
 A more precise evaluation of their performances may also tell us whether they hold further similarities with observed neuronal representations of action in the brain. 
-More broadly, such models can improve our understanding on how animals construct knowledge of objects through experience of interaction. 
+More broadly, such models can improve our understanding of how animals construct knowledge of objects through experience of interaction. 
 
 \bibliography{olivier}
 
