@@ -114,7 +114,7 @@ The robot must probe the environment a little bit like a blind person who uses a
 Probing experiences consist of control loops during which the robot interacts with the environment.   
 They are triggered by an action selected by the robot and result in an outcome. 
 The outcome is informative not of the object itself but of the possibility of interaction afforded by the object to the robot. 
-Past probing experiences drive future behavior because they constitute affordances for action. 
+Past probing experiences drive future behavior because they signal affordances for action. 
 \figureref{fig:cycle} shows this cycle of interaction. 
 The software selects an action associated with spatial information that specifies how the control loop should be enacted in the world. 
 In return, the software receives an outcome associated with spatial information that describes how the control loop has been enacted depending on the actual nature and position of surrounding objects. 
@@ -355,8 +355,7 @@ In this case, to be informative, sensory data should rather be considered as \te
 
 On the contrary, when the agent has rich sensors that allow the identification of features of the world, it is tempting for the developer of the agent's software to consider that sensory data carries representational information about the world. 
 Philosophy of mind, however, provides theoretical arguments against this representationalist hypothesis. 
-These arguments go back to Kant, who claimed that the world ``in itself'' is unknowable, and relate to Piaget's developmental psychology and constructivist epistemology. 
-They also have echos in modern physics. 
+These arguments go back to Kant, who claimed that the world ``in itself'' is unknowable, and relate to Piaget's developmental psychology and theory of enaction \citep[e.g.,][]{froese_enactive_2009}. 
 If we trust these arguments, we can expect SLAPI algorithms to also bring value to agents that have rich sensors. 
 They could endow such agents with more autonomy in the way they construct their own knowledge of the world, and keep this knowledge grounded in their individual experience of interaction.
 
