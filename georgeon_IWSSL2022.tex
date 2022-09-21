@@ -70,7 +70,7 @@
 We introduce the problem for a robot to  localize itself, and, simultaneously, actively infer the existence and properties of \textit{phenomena} present in its surrounding environment: the SLAPI problem. 
 A phenomenon is a representation of an entity ``as the robot experiences it'' through interaction. 
 The SLAPI problem relates to the SLAM problem but differs in that it does not aim at constructing a precise map of the environment, and it can apply to robots with coarse sensors. 
-We demonstrated a SLAPI algorithm to control a robot equipped with omni-directional wheels, an echo-localization sensor, photosensitive sensors, and an inertial measurement unit, but no precise sensors like camera, lidar, or odometry. 
+We demonstrate a SLAPI algorithm to control a robot equipped with omni-directional wheels, an echo-localization sensor, photosensitive sensors, and an inertial measurement unit, but no precise sensors like camera, lidar, or odometry. 
 As the robot circles around an object, it constructs the phenomenon corresponding to this object under the form of the set of the spatially-localized control loops of interaction that the object affords to the robot. 
 SLAPI algorithms could help design pet robots that mimic intrinsic motivation such as curiosity and playfulness with toys. 
 Further studies of the SLAPI problem could improve the scientific understanding of how cognitive beings construct knowledge about objects from sensorimotor experience of interaction.
@@ -104,7 +104,7 @@ We call this process \textit{active phenomenon inference}, in line with the theo
 
 An autonomous agent faces the necessity to actively infer the existence and the properties of objects in its environment when such existence and properties are not directly registered in sensory data. 
 This raises the question of the \textit{representational status of sensory} data: is sensory data representational or not? 
-This question has been discussed times and again at the philosophical level \citep[e.g.,][]{williford_husserls_2013}.
+This question has been discussed time and again at the philosophical level \citep[e.g.,][]{williford_husserls_2013}.
 Loosely, two hypotheses collide: the hypothesis that sensory data carry information about features of the world, versus the hypothesis that sensory data carry information about the agent's experience of interaction with the world. 
 We refer to the former as the \textit{representationalist hypothesis}, and to the latter as the \textit{constructivist hypothesis} because it relates to Piaget's theory of construcitivist learning based on sensorimotor schemes \citep{guillermin_artificial_2022}. 
 
@@ -115,7 +115,7 @@ They are triggered by an action selected by the robot and result in an outcome.
 The outcome is informative not of the object itself but of the possibility of interaction afforded by the object to the robot. 
 Past probing experiences drive future behavior because they constitute affordances for action. 
 \figureref{fig:cycle} shows this cycle of interaction. 
-The software selects an action associated with spatial information that specify how the control loop should be enacted in the world. 
+The software selects an action associated with spatial information that specifies how the control loop should be enacted in the world. 
 In return, the software receives an outcome associated with spatial information that describes how the control loop has been enacted depending on the actual nature and position of surrounding objects. 
 
 
@@ -128,7 +128,7 @@ In return, the software receives an outcome associated with spatial information 
 	{\includegraphics[width=0.8\linewidth]{images/Figure_0_Cycle}}
 \end{figure}
 
-Note that the constructivist hypothesis accepts that the outcome may sometimes register features of the environment but only avoids ``baking'' this assumption in the algorithm \textit{a priori}. 
+Note that the constructivist hypothesis accepts that the outcome may sometimes register features of the environment but avoids ``baking'' this assumption in the algorithm \textit{a priori}. 
 \cite{rudrauf_mathematical_2017} have also proposed an active inference model related to the constructivist hypothesis. He states that ``All we need here is the idea that in one way or another the sensory organs provide an independent source of input and correction for the continually updated world model'' (p. 19).
 
 
@@ -137,7 +137,7 @@ Note that the constructivist hypothesis accepts that the outcome may sometimes r
 
 We use the robot cat of brand Osoyoo\footnote{\url{https://osoyoo.com/2019/11/08/omni-direction-mecanum-wheel-robotic-kit-v1/}}, to which we added an inertial measurement unit (\figureref{fig:robot}). 
 We set up an environment with black lines on the floor and various objects that can be detected through the echo-localization sensor. 
-There is not final target to reach. We only want the robot to explore its environment. 
+There is no final target to reach. We only want the robot to explore its environment. 
 
 \begin{figure}[htbp]
 	% Caption and label go in the first argument and the figure contents
@@ -190,7 +190,7 @@ A C++ program on the robot's Arduino board handles the reception of the action, 
 				\toprule
 				\bfseries Code & \bfseries Description\\
 				\midrule
-				\texttt{Forward} & \multirow{4}{2.5cm}{During 1 sec. or until shock or line detection}\\
+				\texttt{Forward} & \multirow{4}{2.5cm}{During 1 sec. or until impact or line detection}\\
 				\texttt{Backward} &  \\
 				\texttt{Sweep left} &  \\
 				\texttt{Sweep right} & \\ \hline
@@ -209,7 +209,7 @@ A C++ program on the robot's Arduino board handles the reception of the action, 
 				\texttt{Line left} & \multirow{3}{2.8cm}{Floor sensors cross luminosity threshold } \\
 				\texttt{Line front} & \\
 				\texttt{Line right} & \\ \hline
-				\texttt{Shock} & Violent deceleration \\ \hline
+				\texttt{Impact} & Violent deceleration \\ \hline
 				\texttt{Echo lost focus} & No echo where expected \\ \hline
 				\texttt{Echo left} & \multirow{6}{3cm}{Direction and range of the nearest echo}\\  
 				\texttt{Echo right} &  \\  
@@ -224,17 +224,17 @@ A C++ program on the robot's Arduino board handles the reception of the action, 
 	}
 \end{table}
 
-The reception of an action triggers the enaction of the corresponding control loop until its termination condition.
+The reception of an action triggers the enaction of the corresponding control loop until its termination condition is satisfied.
 For example, the \texttt{Forward} action sets the robot in motion. 
 It has three possible termination conditions: 
 \texttt{Default}: time out of 1 second (approximately 20 cm traveled);
 \texttt{Line detection}: the floor sensor detects a line causing the robot to retreat back for a few centimeters; and
-\texttt{Shock}: the inertial measurement unit detects a strong deceleration indicating a shock against an object.
+\texttt{Impact}: the inertial measurement unit detects a strong deceleration indicating an impact with an object.
 
 Besides the action code, the cognitive architecture sends two more values to the robot: the coordinates of a focus point, and an estimated speed. 
 The robot's program uses these to keep the robot's head aligned towards the focus point during the robot's displacement. 
 This helps the robot keep track of objects over various moves. 
-It also gives the human observer the impression that the robot keeps it attention to a particular object, making it look more alive. 
+It also gives the human observer the impression that the robot keeps it attention on a particular object, making it look more alive. 
 
 The robot also returns additional information to the cognitive architecture: yaw, azimuth (angle relative to the north), and duration of the various phases of the control loop. 
 The cognitive architecture uses this information to update the spatial memory based on the robot's displacement. 
@@ -304,15 +304,15 @@ Finally the Decider selects the sub-sequence that is proposed with the highest w
 We have initialized the list of behaviors with predefined behavioral patterns that give the robot a tendency to circle around objects when it detects them. 
 
 With this policy, the robot wanders randomly until it detects an object nearby, and then it circles around this object until the experimenter removes the object. 
-This is sufficient for our demo. 
+This is sufficient for our demonstration. 
 More complex information-seeking policies could be used. 
-\cite{gottlieb_towards_2018} provide a recent literature review on this regard. 
+\cite{gottlieb_towards_2018} provide a recent literature review in this regard. 
 
 \subsection{The phenomenon integrator}
 
 We called this process Integrator because it integrates a heterogeneous set of experiences into a single data structure that represents the object that affords these experiences. 
-We called this data structure a \textit{phenomenon} in compliance with the common sense of this term: the perception by a cognitive being of ``something'' in the environment.
-\cite{thorisson_explanation_2021}'s provided a more technical definition that also matches our usage: ``any useful grouping of a subset of spatio-temporal patterns experienced by an agent in an environment''.
+We called this data structure a \textit{phenomenon} in compliance with the common sense usage of this term: the perception by a cognitive being of ``something'' in the environment.
+\cite{thorisson_explanation_2021} provides a more technical definition that also matches our usage: ``any useful grouping of a subset of spatio-temporal patterns experienced by an agent in an environment''.
 
 
 Once the robot has circled around an abject, the object becomes identified as a single entity, then the Integrator copies its representation from allocentric memory to the phenomenon data structure.
@@ -324,7 +324,7 @@ Like our sequences of experiences, action codes are linked to memory traces of p
 
 \section{Results}
 
-\figureref{fig:results} reports two different phenomena constructed from two kinds of object: an object that affords echo and shock (top), and an object that also affords line detection (bottom).
+\figureref{fig:results} reports two different phenomena constructed from two kinds of object: an object that affords echo and impact (top), and an object that also affords line detection (bottom).
 A representative run can be seen in video \citep{titouan_knockaert_demonstration_2022}.
 It shows the robot circling around the object while constructing the egocentric and allocentric maps. 
 It is worth noting that many human observers attribute the intention of the robot to carefully observe the object due to the fact that it keeps its head pointing to the object. 
@@ -337,7 +337,7 @@ It is worth noting that many human observers attribute the intention of the robo
 	{\caption{Examples of phenomenon inference.
 			  Left: the robot and the object seen by the human observer.
 			  Right: the phenomenon constructed by the robot. 
-			  Top: the object affords echo (orange cells) and shock (red cells). 
+			  Top: the object affords echo (orange cells) and impact (red cells). 
 			  Bottom: the object also affords line detection (black cells). 
 			  Green cells represent empty space.}}
 	{\includegraphics[width=0.6\linewidth]{images/Figure_3_results}}
