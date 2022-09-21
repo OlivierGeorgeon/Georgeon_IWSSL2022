@@ -78,7 +78,7 @@ Further studies of the SLAPI problem could improve the scientific understanding 
 \end{abstract}
 
 \begin{keywords}
-Constructivist learning; active inference; autonomous robotics, SLAM
+Constructivism; active inference; enaction; autonomous robotics; SLAM
 \end{keywords}
 
 \section{Introduction}
@@ -103,7 +103,7 @@ We call this process \textit{active phenomenon inference}, in line with the theo
 \section{The representational status of sensory data}
 \label{sec:input}
 
-An autonomous agent faces the necessity to actively infer the existence and the properties of objects in its environment when such existence and properties are not directly registered in sensory data. 
+An autonomous agent faces the necessity to actively infer the presence and the properties of objects in its environment when such presence and properties are not directly registered in sensory data. 
 This raises the question of the \textit{representational status of sensory} data: is sensory data representational or not? 
 This question has been discussed time and again at the philosophical level \citep[e.g.,][]{williford_husserls_2013}.
 Loosely, two hypotheses collide: the hypothesis that sensory data carry information about features of the world, versus the hypothesis that sensory data carry information about the agent's experience of interaction with the world. 
@@ -130,7 +130,7 @@ In return, the software receives an outcome associated with spatial information 
 \end{figure}
 
 Note that the constructivist hypothesis accepts that the outcome may sometimes register features of the environment but avoids ``baking'' this assumption in the algorithm \textit{a priori}. 
-\cite{rudrauf_mathematical_2017} have also proposed an active inference model related to the constructivist hypothesis. He states that ``All we need here is the idea that in one way or another the sensory organs provide an independent source of input and correction for the continually updated world model'' (p. 19).
+\cite{rudrauf_mathematical_2017} have also proposed an active inference model related to the constructivist hypothesis. They state that ``All we need here is the idea that in one way or another the sensory organs provide an independent source of input and correction for the continually updated world model'' (p. 19).
 
 
 \section{The experimental setup}
@@ -297,7 +297,7 @@ It informs the next action to select by the \textit{Decider}, and constitutes th
 \label{sec:decider}
 
 The Decider implements the policy that selects the robot's actions. 
-For our proof of concept, we used an algorithm we designed previously \citep{georgeon_eca_2013}.
+For our proof of concept, we used an algorithm inspired by our previous work \citep{georgeon_eca_2013,robertson_biologically_2009}.
 It stores a \textit{list of behaviors} in the form of \textit{sequences of experiences} that the robot can enact. 
 After each interaction cycle, the Decider activates the sequences in this list whose beginning sub-sequence matches experiences present in memory. 
 The activated sequences then propose their ending sub-sequences for further enaction with a weight. 
@@ -361,7 +361,7 @@ They could endow such agents with more autonomy in the way they construct their 
 We reported our implementation and experiment as an initial example to illustrate the SLAPI problem, in the hope that it provides clarification. 
 We hope that future models will address more complex problems of phenomenal inference, such as categorization and recognition of similarities and differences between types of phenomena. 
 A more precise evaluation of their performances may also tell us whether they hold further similarities with observed neuronal representations of action in the brain. 
-More broadly, such models can improve our understanding of how animals construct knowledge of objects through experience of interaction. 
+More broadly, such models can improve our understanding of how animals construct knowledge of objects through enaction. 
 
 \bibliography{olivier}
 
