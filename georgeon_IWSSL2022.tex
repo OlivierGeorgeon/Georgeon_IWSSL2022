@@ -94,7 +94,7 @@ In contrast with SLAM, SLAPI does not aim at constructing a map to use for navig
 Instead, it aims at organizing behavior spatially in the vicinity of objects to design robots that mimic intrinsic motivation such as playfulness and curiosity as they discover and interact with unknown objects \citep[e.g.,][]{oudeyer_intrinsic_2007}. 
 Possible applications may not include delivery tasks but may include entertainment and games, similar to playing with pets. 
 
-SLAPI makes no assumption that landmarks can be directly and passively uniquely identified through sensors. 
+SLAPI makes no assumption that landmarks can be directly distinctively identified through sensors. 
 The robot must rather actively interact with objects, possibly from different angles and through different modalities of control loops, to categorize and recognize objects, and possibly use them as landmarks. 
 We call this process \textit{active phenomenon inference}, in line with the theory of active inference \cite[e.g.,][]{friston_world_2021}. 
 % Here the term \textit{phenomenon} refers to the knowledge of physical objects actively constructed by the robot from its point of view and ``as the robot experiences the object through interaction'' \citep{thorisson_explanation_2021}. 
@@ -277,9 +277,7 @@ In our experiment, we observed that the position of experiences were unreliable 
 \subsection{The allocentric memory}
 
 The allocentric memory stores a spatial representation in a coordinate system relative the environment. 
-It is inspired by \textit{grid cells} in the hippocampus of the mammalian brain \citep{grieves_representation_2017}.
-
-Our implementation reproduces the grid cell's hexagonal structure (\figureref{fig:architecture}, bottom right). 
+It is inspired by \textit{grid cells} in the hippocampus of the mammalian brain \citep{grieves_representation_2017}, and reproduces their hexagonal structure (\figureref{fig:architecture}, bottom right). 
 Each cell stores the list of experiences enacted in the location referenced by the cell, and can have one of the following status:
 
 \begin{altdescription}{Phenomenon}
@@ -289,8 +287,12 @@ Each cell stores the list of experiences enacted in the location referenced by t
 	\item[Experience] One or several experiences have been localized here.
 \end{altdescription}
 
-Allocentric memory is used to construct a local spatial representation of the objects with which the robot is interacting.
-It keeps track of the robot's position through path integration. 
+Allocentric memory supports several processes that allow its updating.
+A path integration process keeps track of the robot's position.
+A speed estimation process estimates the robot's speed by comparing the distance to immobile objects after the robot's displacements.
+A position adjustment process attempts to correct errors of localization by re-positioning the robot with regard to immobile objects detected through echo-localization or line detection.    
+
+Allocentric memory serves to construct a local spatial representation of the objects with which the robot is interacting.
 It informs the next action to select by the \textit{Decider}, and constitutes the base for phenomenal inference performed by the \textit{Integrator}. 
 
 \subsection{The decider}
