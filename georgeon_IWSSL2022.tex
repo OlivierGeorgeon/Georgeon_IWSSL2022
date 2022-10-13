@@ -50,9 +50,9 @@
  % *** Make sure there's no spurious space before \nametag ***
 
  % Two authors with the same address
-  \author{\Name{Olivier L. Georgeon} \Email{ogeorgeon@univ-catholyon.fr}\\
-  \Name{Juan R. Vidal} \Email{jvidal@univ-catholyon.fr}\\
-  \addr UR Confluence, Sciences et Humanités (EA 1598) - Lyon Catholic University, France\\
+  \author{\Name{Olivier L. Georgeon}\textsuperscript{1} \Email{ogeorgeon@univ-catholyon.fr}\\
+  \Name{Juan R. Vidal}\textsuperscript{2} \Email{jvidal@univ-catholyon.fr}\\
+  \addr \textsuperscript{1,2} UR CONFLUENCE: Sciences et Humanités (EA 1598), UCLy, Lyon Catholic University, France\\
   \Name{Titouan Knockaert} \Email{titouan.knockaert@gmail.com}\\
   \addr Université Claude Bernard Lyon 1, LIRIS CNRS UMR5205, F-69622 Villeurbanne, France\\
   \Name{Paul Robertson} \Email{paulr@dollabs.com}\\
@@ -263,7 +263,7 @@ This will be used to infer the presence of an object when multiple echos are loc
 
 \subsection{The egocentric memory}
 
-The egocentric memory is a short-term memory of the experiences of interaction in the surrounding of the robot. 
+The egocentric memory is a short-term spatial memory of the experiences of interaction in the surrounding of the robot. 
 It is inspired by the brain's egocentric cells located in the superior colliculus \citep{grieves_representation_2017}.
 
 Technically, it stores the robot's \textit{experiences} in a coordinate system centered on the robot.
@@ -309,7 +309,7 @@ We have initialized the list of behaviors with predefined behavioral patterns th
 With this policy, the robot wanders randomly until it detects an object nearby, and then it circles around this object until the experimenter removes the object. 
 This is sufficient for our demonstration. 
 More complex information-seeking policies could be used. 
-\cite{gottlieb_towards_2018} provide a recent literature review in this regard. 
+\cite{gottlieb_towards_2018} provide a recent literature review in this topic. 
 
 \subsection{The phenomenon integrator}
 
@@ -364,7 +364,7 @@ We hope that future models will address more complex problems of phenomenal infe
 A more precise evaluation of their performances may also tell us whether they hold further similarities with observed neuronal representations of action in the brain. 
 More broadly, such models can improve our understanding of how animals construct knowledge of objects through enaction. 
 
-\acks{We thank Célia Vaz-Cerniglia, Brigitte Blanquet, and Robin Couture for their support to set up the robotics experiment.}
+\acks{We thank Célia Vaz-Cerniglia, Brigitte Blanquet, and Robin Couture for their support to conduct the robotics experiment.}
 
 
 \bibliography{olivier}
