@@ -170,7 +170,7 @@ The \textit{Workspace} contains the \textit{Decider} which implements the robot'
 	{\caption{The software architecture implemented on a remote PC. 
 			Bottom: the robot recieves the action and sends back the outcome through wifi.
 			Top-right: Egocentric memory shows the position of echos (orange circles), the focus of attention (red hexagon), and the previous positions of the robot (green triangles).
-			Bottom-right: Allocentric memory shows the position of the echos (orange cells), the explored cells (white), the position of the robot (green), the unexpored cells (grey).}}
+			Bottom-right: Allocentric memory shows the position of the echos (orange cells), the explored cells (white), the position of the robot (green), the unexplored cells (grey).}}
 	{\includegraphics[width=0.7\linewidth]{images/Figure_2_Architecture}}
 \end{figure}
 
@@ -276,7 +276,7 @@ In our experiment, we observed that the position of experiences were unreliable 
 
 \subsection{The allocentric memory}
 
-The allocentric memory stores a spatial representation in a coordinate system relative the environment. 
+The allocentric memory stores a spatial representation in a coordinate system relative to the environment. 
 It is inspired by \textit{grid cells} in the hippocampus of the mammalian brain \citep{grieves_representation_2017}, and reproduces their hexagonal structure (\figureref{fig:architecture}, bottom right). 
 Each cell stores the list of experiences enacted in the location referenced by the cell, and can have one of the following status:
 
