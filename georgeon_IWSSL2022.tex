@@ -109,7 +109,7 @@ This question has been discussed time and again at the philosophical level \cite
 Loosely, two hypotheses collide: the hypothesis that sensory data carry information about features of the world, versus the hypothesis that sensory data carry information about the agent's experience of interaction with the world. 
 We refer to the former as the \textit{representationalist hypothesis}, and to the latter as the \textit{constructivist hypothesis} because it relates to Piaget's theory of construcitivist learning based on sensorimotor schemes \citep{guillermin_artificial_2022}. 
 
-SLAPI falls within the constructivist hypothesis because it applies to robots that have coarse sensors that do not provide much descriptive information about the environment. 
+SLAPI specifically helps investigate the constructivist hypothesis because it applies to robots that have coarse sensors that do not provide much descriptive information about the environment. 
 The robot must probe the environment a little bit like a blind person who uses a cane to actively construct a mental representation of its surroundings. 
 Probing experiences consist of control loops during which the robot interacts with the environment.   
 They are triggered by an action selected by the robot and result in an outcome. 
@@ -137,8 +137,27 @@ Note that the constructivist hypothesis accepts that the outcome may sometimes r
 \label{sec:experiment}
 
 We use the robot cat of brand Osoyoo\footnote{\url{https://osoyoo.com/2019/11/08/omni-direction-mecanum-wheel-robotic-kit-v1/}}, to which we added an inertial measurement unit (\figureref{fig:robot}). 
-We set up an environment with black lines on the floor and various objects that can be detected through the echo-localization sensor. 
-There is no final target to reach. We only want the robot to explore its environment. 
+We use the omni-directional wheels only to move longitudinally or laterally (sweep). 
+\sectionref{moves} will explain the primitive moves. 
+Each primitive move induces an incertitude of displacement of about $\pm20\%$ that we can't measure. 
+The inertial measurement unit can only measure the yaw with the relatively good accuracy of $\pm1$°.
+It also provides a compass with an accuracy of $\pm5$°. 
+We compute the robot's azimuth (angle from North) using both yaw integration (for precision) and compass (to correct drift).
+We then devise the absolute head direction knowing the head angle relative to the robot with good precision.
+
+The robot can turn its head to perform echo localization in different directions. 
+The distance measure has an accuracy of $\pm 2mm$ but the detection cone spans 70°.  
+We implemented two methods to estimate the direction of an object. 
+Method 1 consists of scanning every 10° through the full range of head direction $[-\pi/2, \pi/2]$ and then computing the center of ``strikes'' of similar distances.
+Method 2 consists of turning the head by steps of 10° until finding a local minimum distance.
+We use Method 1 to find objects in the surrounding. 
+We programmed the robot to keep its head aligned toward a \textit{focus point} during its moves,
+and then to performs Method 2 to re-align its head towards the object.
+
+We set up an environment with various objects that can be detected through echo-localization, and a black circle to delimit the robot's territory.
+With the inaccuracy of measures listed above, it is challenging to infer the position and shapes of objects. 
+On the other hand, the robot has no target to reach. 
+We only want it to explore its environment. 
 
 \begin{figure}[htbp]
 	% Caption and label go in the first argument and the figure contents
@@ -156,7 +175,8 @@ There is no final target to reach. We only want the robot to explore its environ
 \label{sec:software}
 
 As a proof of concept to illustrate the SLAPI problem, we implemented the cognitive architecture depicted in \figureref{fig:architecture}. 
-This architecture is implemented on a remote PC and takes the place of the \textit{Software} in \figureref{fig:cycle}. The robot plus its environment takes the place of the \textit{World}.
+This architecture is implemented on a remote PC and takes the place of the \textit{Software} in \figureref{fig:cycle}. 
+The robot plus the environment take the place of the \textit{World}.
 
 The architecture follows a regular Model-View-Controller design pattern in which the \textit{Memory} plays the role of the database, and the \textit{Workspace} plays the role of the Model. 
 As we will further develop, the \textit{Memory} contains the egocentric memory and the allocentric memory which are displayed on screen via the \textit{View Controllers} (\figureref{fig:architecture}, right).
@@ -169,13 +189,15 @@ The \textit{Workspace} contains the \textit{Decider} which implements the robot'
 	{fig:architecture}
 	{\caption{The software architecture implemented on a remote PC. 
 			Bottom: the robot recieves the action and sends back the outcome through wifi.
-			Top-right: Egocentric memory shows the position of echos (orange circles), the focus of attention (red hexagon), and the previous positions of the robot (green triangles).
-			Bottom-right: Allocentric memory shows the position of the echos (orange cells), the explored cells (white), the position of the robot (green), the unexplored cells (grey).}}
-	{\includegraphics[width=0.7\linewidth]{images/Figure_2_Architecture}}
+			Top-right: Egocentric memory.
+			Bottom-right: Allocentric memory.
+			Orange: echos, green: previous robot positions, red: focus point.}}
+	{\includegraphics[width=0.8\linewidth]{images/Figure_2_Architecture}}
 \end{figure}
 
 
 \subsection{The control loops of interaction implemented in the robot}
+\label{moves}
 
 A C++ program on the robot's Arduino board handles the reception of the action, drives the control loop, and then returns the outcome through wifi. 
 \tableref{tab:action} lists the supported actions and outcomes.
@@ -232,9 +254,8 @@ It has three possible termination conditions:
 \texttt{Line detection}: the floor sensor detects a line causing the robot to retreat back for a few centimeters; and
 \texttt{Impact}: the inertial measurement unit detects a strong deceleration indicating an impact with an object.
 
-Besides the action code, the cognitive architecture sends two more values to the robot: the coordinates of a focus point, and an estimated speed. 
-The robot's program uses these to keep the robot's head aligned towards the focus point during the robot's displacement. 
-This helps the robot keep track of objects over various moves. 
+Besides the action code, the cognitive architecture sends two more values to the robot: the coordinates of the focus point if any, and an estimated speed. 
+As introduced in \sectionref{sec:experiment}, the robot uses them to keep its head aligned towards objects over successive moves. 
 It also gives the human observer the impression that the robot keeps it attention on a particular object, making it look more alive. 
 
 The robot also returns additional information to the cognitive architecture: yaw, azimuth (angle relative to the north), and duration of the various phases of the control loop. 
@@ -261,39 +282,105 @@ This will be used to infer the presence of an object when multiple echos are loc
 	\end{tabular}}
 \end{table}
 
-\subsection{The egocentric memory}
+\subsection{Egocentric memory}
 
 The egocentric memory is a short-term spatial memory of the experiences of interaction in the surrounding of the robot. 
 It is inspired by the brain's egocentric cells located in the superior colliculus \citep{grieves_representation_2017}.
 
 Technically, it stores the robot's \textit{experiences} in a coordinate system centered on the robot.
-An experience is a data structure that contains the action, the outcome, the position in space relative to the robot, and the timestamp. 
-Our implementation initializes the position from a hard-coded model of the robot: line-detection experiences are placed at the position of the floor sensors; echo experiences are placed at the estimated origin of the echo using head direction and measure of echo distance.  
+An experience is a data structure that contains the action, the outcome, the position in space relative to the robot, the timestamp. 
+Our implementation initializes the position from a hard-coded model of the robot: line-detection experiences are placed at the position of the floor sensors; echo experiences are placed at the estimated origin of the echo using head direction and measure of echo distance.
+Additionally, echo experiences also store the direction of the sensor needed by the phenomenon inference function.
 When the robot moves, the positions of experiences are then moved opposite by the robot's estimated displacement (\figureref{fig:architecture}, top right). 
-Of course, errors accumulate causing a drift in egocentric memory. 
+Of course, errors in the estimation of the robot's position accumulate causing a drift in egocentric memory. 
 In our experiment, we observed that the position of experiences were unreliable after 5 to 10 interaction cycles.
 
 
-\subsection{The allocentric memory}
+\subsection{Allocentric memory}
 
-The allocentric memory stores a spatial representation in a coordinate system relative to the environment. 
-It is inspired by \textit{grid cells} in the hippocampus of the mammalian brain \citep{grieves_representation_2017}, and reproduces their hexagonal structure (\figureref{fig:architecture}, bottom right). 
-Each cell stores the list of experiences enacted in the location referenced by the cell, and can have one of the following status:
+The allocentric memory is inspired by \textit{grid cells} in the entorhinal cortex \citep{grieves_representation_2017}, and reproduces their hexagonal structure. 
+Technically, it stores a set of \textit{affordances} that represent the possibilities of interaction afforded by the environment to the robot.  
+An affordance is an experience associated with its position in allocentric reference (\figureref{fig:allocentric}). 
 
-\begin{altdescription}{Phenomenon}
-	\item[Unknown] No experience has been attempted here.
-	\item[Occupied] The robot is localized here.
-	\item[Empty] The robot has been here in the past.
-	\item[Experience] One or several experiences have been localized here.
-\end{altdescription}
+Converting from egocentric to allocentric reference requires establishing an origin point from which path integration can be performed. 
+If this origin point is immobile and recognizable later, it can be used to correct the robot's position and avoid infinite accumulation of position errors.
+Fortunately, in our case, we can use the position of the echo associated with the absolute head direction to recognize the origin point when the robot has performed a complete tour around the object.
+This solution works if the object is convex, and as long as the robot does not mistake objects. 
 
-Allocentric memory supports several processes that allow its updating.
-A path integration process keeps track of the robot's position.
-A speed estimation process estimates the robot's speed by comparing the distance to immobile objects after the robot's displacements.
-A position adjustment process attempts to correct errors of localization by re-positioning the robot with regard to immobile objects detected through echo-localization or line detection.    
+\begin{figure}[htbp]
+	% Caption and label go in the first argument and the figure contents
+	% go in the second argument
+	\floatconts
+	{fig:allocentric}
+	{\caption{Example allocentric memory. 
+	Green: cells previously traversed by the robot. 
+	Orange: echos localized with Method 1.
+	Yellow: origin of the phenomenon. 
+	Small red hexagon: current focus point.
+	Brown: echos localized with method 2 (in this example coming from another object).}}
+	{\includegraphics[width=0.4\linewidth]{images/Figure_4_allocentric_memory}}
+\end{figure}
 
-Allocentric memory serves to construct a local spatial representation of the objects with which the robot is interacting.
-It informs the next action to select by the \textit{Decider}, and constitutes the base for phenomenal inference performed by the \textit{Integrator}. 
+
+\subsection{The phenomenon integrator}
+
+The phenomenon integrator constructs a data structures that represents an object in term of affordances. 
+We call such a data structure a \textit{phenomenon} in compliance with the common sense usage of this term: the perception by a cognitive being of ``something'' in the environment.
+\cite[][p. 8]{thorisson_explanation_2021} provides a more technical definition that also matches our usage: ``any useful grouping of a subset of spatio-temporal patterns experienced by an agent in an environment''.
+Notably, these action-related representations of objects also resemble \textit{action codes} that have been found in parietal regions of the cerebral cortex of humans and other primates \citep{chao_representation_2000,colby_space_1999, schubotz_objects_2014}. 
+Like our affordances, action codes are linked to memory traces of previous actions involving the object.
+
+Our phenomenon data structure contains a set of affordances (\figureref{fig:phenomenon}) and a \textit{confidence coefficient} in the range $[0, 1]$. 
+We implemented \algorithmref{alg:phenomenon} to address the difficulty of localizing affordances in the referential of an initially unknown phenomenon while the robot's estimated position is prone to error. 
+
+\algorithmref{alg:phenomenon} takes a newly found affordance in input, and returns the distance by which the robot's position must be adjusted. 
+It compares the position of the new affordance with the position of the nearest affordance already attached to this phenomenon.
+If the difference is below \textit{MAX\_DISTANCE}, it assumes that the new affordance belongs to this phenomenon. 
+The method \textit{similar\_to()} compares the new affordance with the \textit{origin affordance} (the first affordance attached to this phenomenon). 
+This comparison is based on the affordance's position and on the absolute head direction. 
+The method \textit{increase\_confidence()} keeps track of the number of tours the robot has made around the object. 
+When a new affordance is found similar to the origin affordance after a new tour, then the phenomenon's confidence coefficient is increased.
+The \textit{position\_adjustment} vector is computed to reposition the robot at the origin position relative to the \textit{origin affordance}.
+When the new affordances is not similar to the \textit{origin affordance}, the length of the \textit{position\_adjustment} vector is proportional to  the confidence coefficient. Both the position of the new affordance and the position of the robot are adjusted by the adjustment vector.
+At the beginning, when the confidence is close to zero, the robot rests on its estimated position to roughly estimate the phenomenon's shape. 
+When the confidence becomes close to one after several tours, the robot ceases updating the phenomenon's shape and rather updates its own position with regard to the object based on the distance measured through echo-localization. \textit{Phenomenon.prune()} removes old affordances near the new one that are assumed to have become irrelevant. \textit{Phenomenon.append()} attach the new affordance to the phenomenon.
+
+
+\begin{algorithm2e}
+	\caption{Phenomenon.update(affordance)}
+	\label{alg:phenomenon}
+	$nearest\_affordance \leftarrow phenomenon.find\_nearest(affordance)$\;
+	$delta \leftarrow nearest\_affordance.position - affordance.position$\;
+	
+	\If{$delta < MAX\_DISTANCE$}{
+		\eIf{$affordance.similar\_to(origin\_affordance$)}{
+			$phenomenon.increase\_confidence()$\;
+			$position\_adjustment = origin\_affordance.position$ - affordance.position\;
+		}{
+			$position\_adjustment = phenomenon.confidence * delta$\;
+			$affordance.position \leftarrow affordance.position + position\_adjustment$\;
+			$phenomenone.prune(affordance)$\;
+			$phenomenon.append(affordance)$\;
+		}
+	}
+	\Return{position\_adjustment}
+\end{algorithm2e}
+
+\begin{figure}[htbp]
+	% Caption and label go in the first argument and the figure contents
+	% go in the second argument
+	\floatconts
+	{fig:phenomenon}
+	{\caption{Example phenomenon.
+	Gray triangles and orange half-circles represent the affordances experienced by the robot from different positions and attached to this phenomenon.
+	Gray triangles are the cones of echo-localization.
+	Orange half-circles are the estimated positions of the echos.
+	The object was made of two cans similar to the one in \figureref{fig:architecture} next to each other.
+	Its estimated shape is outlined.}}
+	{\includegraphics[width=0.4\linewidth]{images/Figure_5_phenomenon}}
+\end{figure}
+
+
 
 \subsection{The decider}
 \label{sec:decider}
@@ -311,21 +398,8 @@ This is sufficient for our demonstration.
 More complex information-seeking policies could be used. 
 \cite{gottlieb_towards_2018} provide a recent literature review in this topic. 
 
-\subsection{The phenomenon integrator}
 
-We called this process Integrator because it integrates a heterogeneous set of experiences into a single data structure that represents the object that affords these experiences. 
-We called this data structure a \textit{phenomenon} in compliance with the common sense usage of this term: the perception by a cognitive being of ``something'' in the environment.
-\cite{thorisson_explanation_2021} provides a more technical definition that also matches our usage: ``any useful grouping of a subset of spatio-temporal patterns experienced by an agent in an environment''.
-
-
-Once the robot has circled around an abject, the object becomes identified as a single entity, then the Integrator copies its representation from allocentric memory to the phenomenon data structure.
-The phenomenon thus stores a local map of experiences afforded by the object. 
-
-Notably, these action-related representations of objects resemble \textit{action codes} that have been found in parietal regions of the cerebral cortex of humans and other primates \citep{chao_representation_2000,colby_space_1999, schubotz_objects_2014}. 
-Like our sequences of experiences, action codes are linked to memory traces of previous actions involving the object.
-
-
-\section{Results}
+\section{Analysis}
 
 \figureref{fig:results} reports two different phenomena constructed from two kinds of object: an object that affords echo and impact (top), and an object that also affords line detection (bottom).
 A representative run can be seen in video \citep{titouan_knockaert_demonstration_2022}.
