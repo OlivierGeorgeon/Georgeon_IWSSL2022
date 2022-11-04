@@ -188,9 +188,10 @@ The \textit{Workspace} contains the \textit{Decider} which implements the robot'
 	\floatconts
 	{fig:architecture}
 	{\caption{The software architecture implemented on a remote PC. 
-			Bottom: the robot recieves the action and sends back the outcome through wifi.
+			Bottom: the robot interacting with a moneybox. 
+			It receives the action and sends back the outcome through wifi.
 			Top-right: Egocentric memory.
-			Bottom-right: Allocentric memory.
+			Bottom-right: Allocentric memory showing the constructed representation of the moneybox.
 			Orange: echos, green: previous robot positions, red: focus point.}}
 	{\includegraphics[width=0.8\linewidth]{images/Figure_2_Architecture}}
 \end{figure}
@@ -217,9 +218,9 @@ A C++ program on the robot's Arduino board handles the reception of the action, 
 				\texttt{Backward} &  \\
 				\texttt{Sweep left} &  \\
 				\texttt{Sweep right} & \\ \hline
-				\texttt{Turn left} & $\pi/4$ \\
-				\texttt{Turn right} & $-\pi/4$ \\ \hline
-				\texttt{Head scan} & $[-\pi/2, \pi/2]$ \\
+				\texttt{Turn left} & by $\pi/4$ \\
+				\texttt{Turn right} & by $-\pi/4$ \\ \hline
+				\texttt{Head scan} & $-\pi/2$ to $\pi/2$ \\
 				\bottomrule
 		\end{tabular}}
 		\qquad
@@ -305,7 +306,7 @@ An affordance is an experience associated with its position in allocentric refer
 Converting from egocentric to allocentric reference requires establishing an origin point from which path integration can be performed. 
 If this origin point is immobile and recognizable later, it can be used to correct the robot's position and avoid infinite accumulation of position errors.
 Fortunately, in our case, we can use the position of the echo associated with the absolute head direction to recognize the origin point when the robot has performed a complete tour around the object.
-This solution works if the object is convex, and as long as the robot does not mistake objects. 
+This solution works if the object is convex, as long as the robot does not mistake objects. 
 
 \begin{figure}[htbp]
 	% Caption and label go in the first argument and the figure contents
@@ -324,27 +325,29 @@ This solution works if the object is convex, and as long as the robot does not m
 
 \subsection{The phenomenon integrator}
 
-The phenomenon integrator constructs a data structures that represents an object in term of affordances. 
-We call such a data structure a \textit{phenomenon} in compliance with the common sense usage of this term: the perception by a cognitive being of ``something'' in the environment.
+The phenomenon integrator constructs a data structure that represents an object in term of affordances. 
+We call this data structure a \textit{phenomenon} in compliance with the common sense usage of this term: the perception by a cognitive being of ``something'' in the environment.
 \cite[][p. 8]{thorisson_explanation_2021} provides a more technical definition that also matches our usage: ``any useful grouping of a subset of spatio-temporal patterns experienced by an agent in an environment''.
 Notably, these action-related representations of objects also resemble \textit{action codes} that have been found in parietal regions of the cerebral cortex of humans and other primates \citep{chao_representation_2000,colby_space_1999, schubotz_objects_2014}. 
 Like our affordances, action codes are linked to memory traces of previous actions involving the object.
 
-Our phenomenon data structure contains a set of affordances (\figureref{fig:phenomenon}) and a \textit{confidence coefficient} in the range $[0, 1]$. 
-We implemented \algorithmref{alg:phenomenon} to address the difficulty of localizing affordances in the referential of an initially unknown phenomenon while the robot's estimated position is prone to error. 
+Our phenomenon data structure contains a set of affordances (\figureref{fig:phenomenon}) and a decimal \textit{confidence coefficient} in the range $[0, 1]$. 
+We implemented \algorithmref{alg:phenomenon} to address the difficulty of localizing affordances relative to an initially unknown phenomenon while the robot's estimated position is prone to error. 
 
-\algorithmref{alg:phenomenon} takes a newly found affordance in input, and returns the distance by which the robot's position must be adjusted. 
-It compares the position of the new affordance with the position of the nearest affordance already attached to this phenomenon.
-If the difference is below \textit{MAX\_DISTANCE}, it assumes that the new affordance belongs to this phenomenon. 
-The method \textit{similar\_to()} compares the new affordance with the \textit{origin affordance} (the first affordance attached to this phenomenon). 
-This comparison is based on the affordance's position and on the absolute head direction. 
-The method \textit{increase\_confidence()} keeps track of the number of tours the robot has made around the object. 
-When a new affordance is found similar to the origin affordance after a new tour, then the phenomenon's confidence coefficient is increased.
-The \textit{position\_adjustment} vector is computed to reposition the robot at the origin position relative to the \textit{origin affordance}.
-When the new affordances is not similar to the \textit{origin affordance}, the length of the \textit{position\_adjustment} vector is proportional to  the confidence coefficient. Both the position of the new affordance and the position of the robot are adjusted by the adjustment vector.
-At the beginning, when the confidence is close to zero, the robot rests on its estimated position to roughly estimate the phenomenon's shape. 
-When the confidence becomes close to one after several tours, the robot ceases updating the phenomenon's shape and rather updates its own position with regard to the object based on the distance measured through echo-localization. \textit{Phenomenon.prune()} removes old affordances near the new one that are assumed to have become irrelevant. \textit{Phenomenon.append()} attach the new affordance to the phenomenon.
-
+\algorithmref{alg:phenomenon} takes a newly found affordance object in input, and returns the distance vector by which the robot's position must be corrected. 
+Lines L1 and L2 compare the position vector of the new affordance with the position vector of the nearest affordance already attached to this phenomenon.
+L3: if the difference is below \textit{MAX\_DISTANCE}, the new affordance is considered belonging to this phenomenon. 
+L4: the method \textit{similar\_to()} compares the new affordance with the \textit{origin affordance} (the first affordance attached to this phenomenon) on the basis of their positions and their absolute head directions. 
+L5: the method \textit{increase\_confidence()} keeps track of the number of tours the robot has made around the object. 
+When a new affordance is found similar to the \textit{origin affordance} after a new tour, it increases the phenomenon's \textit{confidence} coefficient.
+L6: the \textit{position\_correction} vector is computed to reposition the robot at the origin position given by the \textit{origin affordance}.
+L8: when the new affordance is not similar to the \textit{origin affordance}, the length of the \textit{position\_correction} vector is made proportional to  the \textit{confidence} coefficient. 
+L10: the position of the new affordance is corrected by the \textit{position\_correction} vector.
+This means that, when the confidence in the phenomenon is close to zero at the beginning, the robot rests on its estimated position to roughly estimate the phenomenon's shape. 
+When the confidence in the phenomenon becomes close to one after several tours, the robot ceases updating the phenomenon's shape and rather corrects its own position relative to the phenomenon. 
+L11: \textit{phenomenon.prune()} removes old affordances near the new one that have become irrelevant. 
+L12: \textit{phenomenon.append()} attaches the new affordance to the phenomenon.
+L14: returns the \textit{position\_correction} vector to correct the robot's position. 
 
 \begin{algorithm2e}
 	\caption{Phenomenon.update(affordance)}
@@ -355,15 +358,15 @@ When the confidence becomes close to one after several tours, the robot ceases u
 	\If{$delta < MAX\_DISTANCE$}{
 		\eIf{$affordance.similar\_to(origin\_affordance$)}{
 			$phenomenon.increase\_confidence()$\;
-			$position\_adjustment = origin\_affordance.position$ - affordance.position\;
+			$position\_correction = origin\_affordance.position - affordance.position$\;
 		}{
-			$position\_adjustment = phenomenon.confidence * delta$\;
-			$affordance.position \leftarrow affordance.position + position\_adjustment$\;
-			$phenomenone.prune(affordance)$\;
-			$phenomenon.append(affordance)$\;
+			$position\_correction = phenomenon.confidence * delta$\;
 		}
+		$affordance.position \leftarrow affordance.position + position\_correction$\;
+		$phenomenon.prune(affordance)$\;
+		$phenomenon.append(affordance)$\;
 	}
-	\Return{position\_adjustment}
+	\Return{position\_correction}
 \end{algorithm2e}
 
 \begin{figure}[htbp]
@@ -373,10 +376,10 @@ When the confidence becomes close to one after several tours, the robot ceases u
 	{fig:phenomenon}
 	{\caption{Example phenomenon.
 	Gray triangles and orange half-circles represent the affordances experienced by the robot from different positions and attached to this phenomenon.
-	Gray triangles are the cones of echo-localization.
-	Orange half-circles are the estimated positions of the echos.
-	The object was made of two cans similar to the one in \figureref{fig:architecture} next to each other.
-	Its estimated shape is outlined.}}
+	Gray triangles represent the cones of echo-localization.
+	Orange half-circles mark the estimated positions of the echos.
+	The object was made of two moneyboxes similar to the one in \figureref{fig:architecture} next to each other.
+	Black line: the object's outline estimated by the robot.}}
 	{\includegraphics[width=0.4\linewidth]{images/Figure_5_phenomenon}}
 \end{figure}
 
@@ -399,26 +402,13 @@ More complex information-seeking policies could be used.
 \cite{gottlieb_towards_2018} provide a recent literature review in this topic. 
 
 
-\section{Analysis}
+\section{More demonstrations}
 
-\figureref{fig:results} reports two different phenomena constructed from two kinds of object: an object that affords echo and impact (top), and an object that also affords line detection (bottom).
-A representative run can be seen in video \citep{titouan_knockaert_demonstration_2022}.
-It shows the robot circling around the object while constructing the egocentric and allocentric maps. 
+Videos of example runs are available on Titouan Knockaert's and Olivier Georgeon's youtube channels.
+\cite{knockaert_demonstration_2022} demonstrates the robot circling around an object while constructing the egocentric and allocentric maps. 
+\cite{georgeon_demontration_2021} shows the robot interacting with black lines and the user.
+Now we are working on demonstrating the learning of phenomena from different sensory modalities. 
 It is worth noting that many human observers attribute the intention of the robot to carefully observe the object due to the fact that it keeps its head pointing to the object. 
-
-\begin{figure}[htbp]
-	% Caption and label go in the first argument and the figure contents
-	% go in the second argument
-	\floatconts
-	{fig:results}
-	{\caption{Examples of phenomenon inference.
-			  Left: the robot and the object seen by the human observer.
-			  Right: the phenomenon constructed by the robot. 
-			  Top: the object affords echo (orange cells) and impact (red cells). 
-			  Bottom: the object also affords line detection (black cells). 
-			  Green cells represent empty space.}}
-	{\includegraphics[width=0.6\linewidth]{images/Figure_3_results}}
-\end{figure}
 
 
 \section{Conclusion}
