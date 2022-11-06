@@ -84,15 +84,20 @@ Constructivism; active inference; enaction; autonomous robotics; SLAM
 \section{Introduction}
 \label{sec:intro}
 
-The problem of getting mobile robots to autonomously learn the position of surrounding objects, recognize them, and keep track of their relative displacements is considered by many to be a key prerequisite of truly autonomous robots. 
-Within this framework, the SLAM problem (Simultaneous Localization and Mapping) has been formalized and studied since the 1990s: constructing and updating a map of an unknown environment while simultaneously keeping track of the robot's position within it \citep[e.g.,][]{taketomi_visual_2017}.
-SLAM algorithms are tailored to the available resources: odometric sensors, sensors of the environment, computational capacities, as well as the landmarks' properties, quantity, and dynamics, and the usage intended for the robot.
+\cite{hawkins_framework_2019} proposed the \textit{thousand brain theory} to explain how the brain constructs knowledge of objects from sensorimotor experience using neuronal structures involving place cells distributed throughout the cortex.
+We situate this theory in the epistemological framework of developmental learning from sensorimotor experience, often attributed to Piaget.
+To test such theories, it is useful to design robots that can autonomously learn from their experience of interacting whit objects.
+Hawking specifically emphasizes the importance of spatial learning and conversion of spatial reference through displacement encoding. 
 
-When displacements are imprecise and odometric data is not available, when landmarks are not directly identifiable, and below a certain level of scarcity and noise in the sensory data relative to the environment’s complexity, it becomes difficult to perform SLAM accurately enough to use the robot for tasks involving complex navigation \citep{gay_towards_2021}. 
-For such robots, we propose the SLAPI problem:  Simultaneous Localization and Active Phenomenon Inference.
+In robotics, spatial learning has been formalized and studied since the 1990s under the name of the SLAM problem (Simultaneous Localization and Mapping): constructing and updating a map of an unknown environment while simultaneously keeping track of the robot's position within it \citep[e.g.,][]{taketomi_visual_2017}.
+SLAM algorithms are tailored to the available resources: odometric sensors, sensors of the environment, computational capacities, as well as the landmarks' properties, quantity, and dynamics, and the usage intended for the robot.
+When displacements are imprecise and odometric data is not available, and below a certain level of scarcity and noise in the sensory data relative to the environment’s complexity, it becomes difficult to perform SLAM accurately \citep{gay_towards_2021}. 
+
+The sensory system of humans and animals does not provide precise measures of distances and displacements. 
+To investigate how an autonomous system equiped with coarse sensors can nonetheless perform sensorimotor spatial learning, we propose the SLAPI problem in robotics: Simultaneous Localization and Active Phenomenon Inference.
 In contrast with SLAM, SLAPI does not aim at constructing a map to use for navigation. 
 Instead, it aims at organizing behavior spatially in the vicinity of objects to design robots that mimic intrinsic motivation such as playfulness and curiosity as they discover and interact with unknown objects \citep[e.g.,][]{oudeyer_intrinsic_2007}. 
-Possible applications may not include delivery tasks but may include entertainment and games with lifelike companion robots. 
+Possible applications may not include delivery tasks but may include entertainment and games with lifelike companion robots, real of virtual. 
 
 SLAPI makes no assumption that landmarks can be directly distinctively identified through sensors. 
 The robot must rather actively interact with objects, possibly from different angles and through different modalities of control loops, to categorize and recognize objects, and possibly use them as landmarks. 
@@ -109,8 +114,7 @@ This question has been discussed time and again at the philosophical level \cite
 Loosely, two hypotheses collide: the hypothesis that sensory data carry information about features of the world, versus the hypothesis that sensory data carry information about the agent's experience of interaction with the world. 
 We refer to the former as the \textit{representationalist hypothesis}, and to the latter as the \textit{constructivist hypothesis} because it relates to Piaget's theory of construcitivist learning based on sensorimotor schemes \citep{guillermin_artificial_2022}. 
 
-SLAPI specifically helps investigate the constructivist hypothesis because it applies to robots that have coarse sensors that do not provide much descriptive information about the environment. 
-The robot must probe the environment a little bit like a blind person who uses a cane to actively construct a mental representation of its surroundings. 
+SLAPI specifically helps investigate the constructivist hypothesis because the robot must probe the environment a little bit like a blind person who uses a cane to actively construct a mental representation of its surroundings. 
 Probing experiences consist of control loops during which the robot interacts with the environment.   
 They are triggered by an action selected by the robot and result in an outcome. 
 The outcome is informative not of the object itself but of the possibility of interaction afforded by the object to the robot. 
@@ -200,7 +204,7 @@ The \textit{Workspace} contains the \textit{Decider} which implements the robot'
 \subsection{The control loops of interaction implemented in the robot}
 \label{moves}
 
-A C++ program on the robot's Arduino board handles the reception of the action, drives the control loop, and then returns the outcome through wifi. 
+A C++ program on the robot's Arduino board handles the reception of the action from the PC through wifi, drives the control loop, and then sends the outcome back to the PC. 
 \tableref{tab:action} lists the supported actions and outcomes.
 
 \begin{table}[htbp]
