@@ -86,7 +86,7 @@ Constructivism; active inference; enaction; autonomous robotics; SLAM
 
 \cite{hawkins_framework_2019} proposed the \textit{thousand brain theory} to explain how the brain constructs knowledge of objects from sensorimotor experience using neuronal structures involving place cells distributed throughout the cortex.
 We situate this theory in the epistemological framework of developmental learning from sensorimotor experience, often attributed to Piaget.
-To test such theories, it is useful to design robots that can autonomously learn from their experience of interacting whit objects.
+To test such theories, it is useful to design robots that autonomously learn from their experience of interacting with objects.
 Hawking specifically emphasizes the importance of spatial learning and conversion of spatial reference through displacement encoding. 
 
 In robotics, spatial learning has been formalized and studied since the 1990s under the name of the SLAM problem (Simultaneous Localization and Mapping): constructing and updating a map of an unknown environment while simultaneously keeping track of the robot's position within it \citep[e.g.,][]{taketomi_visual_2017}.
@@ -335,7 +335,7 @@ We call this data structure a \textit{phenomenon} in compliance with the common 
 Notably, these action-related representations of objects also resemble \textit{action codes} that have been found in parietal regions of the cerebral cortex of humans and other primates \citep{chao_representation_2000,colby_space_1999, schubotz_objects_2014}. 
 Like our affordances, action codes are linked to memory traces of previous actions involving the object.
 
-Our phenomenon data structure contains a set of affordances (\figureref{fig:phenomenon}) and a decimal \textit{confidence coefficient} in the range $[0, 1]$. 
+Our phenomenon data structure contains a set of affordances and a decimal \textit{confidence coefficient} in the range $[0, 1]$. 
 We implemented \algorithmref{alg:phenomenon} to address the difficulty of localizing affordances relative to an initially unknown phenomenon while the robot's estimated position is prone to error. 
 
 \algorithmref{alg:phenomenon} takes a newly found affordance object in input, and returns the distance vector by which the robot's position must be corrected. 
@@ -373,18 +373,25 @@ L14: returns the \textit{position\_correction} vector to correct the robot's pos
 	\Return{position\_correction}
 \end{algorithm2e}
 
+\figureref{fig:phenomenon} shows two example phenomena learned by the robot.  
+It shows that the object's shapes inferred by the robot, while imprecise, is sufficient to discriminate between different objects.  
+
+
 \begin{figure}[htbp]
 	% Caption and label go in the first argument and the figure contents
 	% go in the second argument
 	\floatconts
 	{fig:phenomenon}
-	{\caption{Example phenomenon.
-	Gray triangles and orange half-circles represent the affordances experienced by the robot from different positions and attached to this phenomenon.
-	Gray triangles represent the cones of echo-localization.
-	Orange half-circles mark the estimated positions of the echos.
-	The object was made of two moneyboxes similar to the one in \figureref{fig:architecture} next to each other.
+	{\caption{Example phenomena a) learned from the moneybox shown in \figureref{fig:architecture}, b) from two moneyboxes next to each other.
+	Each affordance is represented by a gray triangle (cone of echo-localization) and an orange half-circle (estimated position of echo).
 	Black line: the object's outline estimated by the robot.}}
-	{\includegraphics[width=0.4\linewidth]{images/Figure_5_phenomenon}}
+	{
+	\subfigure[]{\label{fig:image-a}%
+	\includegraphics[width=0.3\linewidth]{images/Figure_5_phenomenon_a}}
+	\qquad
+	\subfigure[]{\label{fig:image-b}%
+	\includegraphics[width=0.3\linewidth]{images/Figure_5_phenomenon}}
+	}
 \end{figure}
 
 
