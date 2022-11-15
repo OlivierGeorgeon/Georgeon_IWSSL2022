@@ -51,8 +51,8 @@
 
  % Two authors with the same address
   \author{\Name{Olivier L. Georgeon}\textsuperscript{1} \Email{ogeorgeon@univ-catholyon.fr}\\
-  \Name{Juan R. Vidal}\textsuperscript{2} \Email{jvidal@univ-catholyon.fr}\\
-  \addr \textsuperscript{1,2} UR CONFLUENCE: Sciences et Humanités (EA 1598), UCLy, Lyon Catholic University, France\\
+  \Name{Juan R. Vidal}\textsuperscript{1} \Email{jvidal@univ-catholyon.fr}\\
+  \addr \textsuperscript{1} UR CONFLUENCE: Sciences et Humanités (EA 1598), UCLy, Lyon Catholic University, France\\
   \Name{Titouan Knockaert} \Email{titouan.knockaert@gmail.com}\\
   \addr Université Claude Bernard Lyon 1, LIRIS CNRS UMR5205, F-69622 Villeurbanne, France\\
   \Name{Paul Robertson} \Email{paulr@dollabs.com}\\
@@ -194,8 +194,8 @@ The \textit{Workspace} contains the \textit{Decider} which implements the robot'
 	{\caption{The software architecture implemented on a remote PC. 
 			Bottom: the robot interacting with a moneybox. 
 			It receives the action and sends back the outcome through wifi.
-			Top-right: Egocentric memory.
-			Bottom-right: Allocentric memory showing the constructed representation of the moneybox.
+			Top-right: Egocentric memory display.
+			Bottom-right: Allocentric memory display showing the constructed representation of the moneybox.
 			Orange: echos, green: previous robot positions, red: focus point.}}
 	{\includegraphics[width=0.8\linewidth]{images/Figure_2_Architecture}}
 \end{figure}
@@ -261,7 +261,7 @@ It has three possible termination conditions:
 
 Besides the action code, the cognitive architecture sends two more values to the robot: the coordinates of the focus point if any, and an estimated speed. 
 As introduced in \sectionref{sec:experiment}, the robot uses them to keep its head aligned towards objects over successive moves. 
-It also gives the human observer the impression that the robot keeps it attention on a particular object, making it look more alive. 
+This behavior gives the human observer the impression that the robot keeps its attention on a particular object, making it look more alive. 
 
 The robot also returns additional information to the cognitive architecture: yaw, azimuth (angle relative to the north), and duration of the various phases of the control loop. 
 The cognitive architecture uses this information to update the spatial memory based on the robot's displacement. 
@@ -293,12 +293,12 @@ The egocentric memory is a short-term spatial memory of the experiences of inter
 It is inspired by the brain's egocentric cells located in the superior colliculus \citep{grieves_representation_2017}.
 
 Technically, it stores the robot's \textit{experiences} in a coordinate system centered on the robot.
-An experience is a data structure that contains the action, the outcome, the position in space relative to the robot, the timestamp. 
+An experience is a data structure that contains the action, the outcome, the position in space relative to the robot, and the timestamp. 
 Our implementation initializes the position from a hard-coded model of the robot: line-detection experiences are placed at the position of the floor sensors; echo experiences are placed at the estimated origin of the echo using head direction and measure of echo distance.
 Additionally, echo experiences also store the direction of the sensor needed by the phenomenon inference function.
 When the robot moves, the positions of experiences are then moved opposite by the robot's estimated displacement (\figureref{fig:architecture}, top right). 
-Of course, errors in the estimation of the robot's position accumulate causing a drift in egocentric memory. 
-In our experiment, we observed that the position of experiences were unreliable after 5 to 10 interaction cycles.
+Due to the imprecision listed in \sectionref{sec:experiment}, errors in the estimation of the robot's position accumulate causing a drift in egocentric memory. 
+Our implementation removes the experiments older than 10 interaction cycles from the egocentric memory display because they are unreliable.
 
 
 \subsection{Allocentric memory}
@@ -317,7 +317,7 @@ This solution works if the object is convex, as long as the robot does not mista
 	% go in the second argument
 	\floatconts
 	{fig:allocentric}
-	{\caption{Example allocentric memory. 
+	{\caption{Example allocentric memory after circling around an oblong object. 
 	Green: cells previously traversed by the robot. 
 	Orange: echos localized with Method 1.
 	Yellow: origin of the phenomenon. 
@@ -373,8 +373,8 @@ L14: returns the \textit{position\_correction} vector to correct the robot's pos
 	\Return{position\_correction}
 \end{algorithm2e}
 
-\figureref{fig:phenomenon} shows two example phenomena learned by the robot.  
-It shows that the object's shapes inferred by the robot, while imprecise, is sufficient to discriminate between different objects.  
+\figureref{fig:phenomenon} shows two example phenomena learned by the robot with this algorithm.  
+It shows that the object's shapes inferred by the robot, while imprecise, allow discriminating between different objects.
 
 
 \begin{figure}[htbp]
@@ -400,7 +400,7 @@ It shows that the object's shapes inferred by the robot, while imprecise, is suf
 \label{sec:decider}
 
 The Decider implements the policy that selects the robot's actions. 
-For our proof of concept, we used an algorithm inspired by our previous work \citep{georgeon_eca_2013,robertson_biologically_2009}.
+For our proof of concept, we used decision mechanism inspired by our previous work \citep{georgeon_eca_2013,robertson_biologically_2009}.
 It stores a \textit{list of behaviors} in the form of \textit{sequences of experiences} that the robot can enact. 
 After each interaction cycle, the Decider activates the sequences in this list whose beginning sub-sequence matches experiences present in memory. 
 The activated sequences then propose their ending sub-sequences for further enaction with a weight. 
@@ -409,8 +409,7 @@ We have initialized the list of behaviors with predefined behavioral patterns th
 
 With this policy, the robot wanders randomly until it detects an object nearby, and then it circles around this object until the experimenter removes the object. 
 This is sufficient for our demonstration. 
-More complex information-seeking policies could be used. 
-\cite{gottlieb_towards_2018} provide a recent literature review in this topic. 
+In future studies, we will implement more complex information-seeking policies, possibly inspired by a rich recent literature on this topic \citep[e.g.][]{gottlieb_towards_2018}. 
 
 
 \section{More demonstrations}
@@ -434,9 +433,9 @@ These arguments go back to Kant, who claimed that the world ``in itself'' is unk
 If we trust these arguments, we can expect SLAPI algorithms to also bring value to agents that have rich sensors. 
 They could endow such agents with more autonomy in the way they construct their own knowledge of the world, and keep this knowledge grounded in their individual experience of interaction.
 
-We reported our implementation and experiment as an initial example to illustrate the SLAPI problem, in the hope that it provides clarification. 
-We hope that future models will address more complex problems of phenomenal inference, such as categorization and recognition of similarities and differences between types of phenomena. 
-A more precise evaluation of their performances may also tell us whether they hold further similarities with observed neuronal representations of action in the brain. 
+We reported our implementation and experiment as an initial example to illustrate the SLAPI problem, in the hope that it provides clarification on how SLAM techniques can be used to study autonomous constructivist learning. 
+We hope that future models will address more complex problems of phenomenal inference such as recognition of similarities and differences between types of phenomena and composition of parts of phenomena, as called for by \cite{hawkins_framework_2019}. 
+A more precise evaluation of the performance of the integrator's mechanism may also tell us whether it holds further similarities with observed neuronal representations of action in the brain. 
 More broadly, such models can improve our understanding of how animals construct knowledge of objects through enaction. 
 
 \acks{We thank Célia Vaz-Cerniglia, Brigitte Blanquet, and Robin Couture for their support to conduct the robotics experiment.}
